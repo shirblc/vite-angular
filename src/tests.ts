@@ -29,15 +29,17 @@
 
 import 'core-js/full/reflect';
 import 'zone.js/dist/zone';
+import 'zone.js/dist/zone-testing';
+import { getTestBed } from '@angular/core/testing';
+import {
+  BrowserDynamicTestingModule,
+  platformBrowserDynamicTesting
+} from '@angular/platform-browser-dynamic/testing';
+import './app/app.module';
+// test-placeholder
 
-import { enableProdMode } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-
-import { AppModule } from './app/app.module';
-import { environment } from './environments/environment';
-
-if (environment.production) {
-  enableProdMode();
-}
-
-platformBrowserDynamic().bootstrapModule(AppModule);
+// First, initialize the Angular testing environment.
+getTestBed().initTestEnvironment(
+  BrowserDynamicTestingModule,
+  platformBrowserDynamicTesting()
+);
