@@ -1,6 +1,8 @@
 import MagicString from "magic-string";
-import fs from "fs";
+import fs, { readFileSync } from "fs";
 import { Plugin } from "vite";
+import typescript from "typescript";
+const { transpileModule } = typescript;
 
 interface ReplacerConfig {
   inlineTemplates: boolean;
@@ -130,6 +132,41 @@ export function SetProductionEnvPlugin(mode: string): Plugin {
       return {
         code: magicString.toString(),
         map: magicString.generateMap()
+      }
+    }
+  }
+}
+
+
+/**
+ * A plugin for transpiling the TypeScript files (including the decorators).
+ * Seeing as ESBuild doesn't support the experimental decorators, we need to
+ * transpile the TypeScript decorators - and by extension whole files - ourselves.
+ * This only applies in development, as the production build uses rollup.
+ */
+export function TranspileDecoratorsVite(): Plugin {
+  return {
+    name: "vite-plugin-transpile-decorators",
+    enforce: "pre",
+    apply: "serve",
+    transform(code, id) {
+      if (id.endsWith(".ts")) {
+        const magicString = new MagicString(code);
+        const tempString = magicString.toString();
+        const tsConfigString = readFileSync("./tsconfig.json", {encoding: "utf8"});
+        const compilerOptions = JSON.parse(tsConfigString)["compilerOptions"];
+
+        const transpiled = transpileModule(tempString, {
+          fileName: id,
+          compilerOptions,
+        });
+
+        magicString.overwrite(0, code.length, transpiled.outputText);
+
+        return {
+          code: magicString.toString(),
+          map: magicString.generateMap()
+        };
       }
     }
   }
