@@ -11,8 +11,8 @@
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.1.6",
     "@types/node": "^20.11.20",
+    "less": "^4.2.0",
     "magic-string": "^0.30.7",
-    "sass": "^1.71.1",
     "typescript": "^5.3.3",
     "vite": "^5.1.4"
   },

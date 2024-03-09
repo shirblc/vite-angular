@@ -10,8 +10,8 @@ export default defineConfig(({ mode }) => ({
   ],
   css: {
     preprocessorOptions: {
-      sass: {
-        additionalData: `@import "./src/sass/main.sass"`,
+      less: {
+        additionalData: `@import "./src/styles/main.less"`,
       },
     }
   },
