@@ -95,50 +95,6 @@ export function ReplaceTemplateUrlPlugin(config: ReplacerConfig = { inlineTempla
 };
 
 /**
- * Sets the angular environment to production.
- * Originally written as a Browserify transform: 
- * https://github.com/sendahug/send-hug-frontend/blob/dev/gulpfile.js#L233
- * and later as rollup plugin: 
- * https://github.com/shirblc/angular-gulp/blob/main/processor.js#L54
- * 
- * @param mode - string - the mode passed in by Vite.
- */
-export function SetProductionEnvPlugin(mode: string): Plugin {
-  return {
-    name: 'vite-plugin-production-setter',
-    /**
-     * Transform hook for Rollup.
-     * Depending on the mode passed in by Vite, determines whether to 
-     * switch Angular to production.
-     * @param code - the code passed in by Rollup.
-     * @returns the updated code and the sourcemap.
-     */
-    transform(code) {
-      if (mode == "development") return code;
-
-      const magicString = new MagicString(code);
-      let tempString = magicString.toString();
-
-      const environment = tempString.match(/environments\/environment/);
-
-      if(environment && environment.index) {
-        const start = environment.index;
-        const end = start + environment[0].length;
-        const newString = `environments/environment.prod`;
-
-        magicString.overwrite(start, end, newString);
-      }
-
-      return {
-        code: magicString.toString(),
-        map: magicString.generateMap()
-      }
-    }
-  }
-}
-
-
-/**
  * A plugin for transpiling the TypeScript files (including the decorators).
  * Seeing as ESBuild doesn't support the experimental decorators, we need to
  * transpile the TypeScript decorators - and by extension whole files - ourselves.

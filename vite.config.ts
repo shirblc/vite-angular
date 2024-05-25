@@ -1,11 +1,10 @@
 import { defineConfig } from "vite";
 import typescript from "@rollup/plugin-typescript";
-import { ReplaceTemplateUrlPlugin, SetProductionEnvPlugin, TranspileDecoratorsVite } from "./plugins";
+import { ReplaceTemplateUrlPlugin, TranspileDecoratorsVite } from "./plugins";
 
-export default defineConfig(({ mode }) => ({
+export default defineConfig({
   plugins: [
     ReplaceTemplateUrlPlugin(),
-    SetProductionEnvPlugin(mode),
     TranspileDecoratorsVite()
   ],
   css: {
@@ -26,4 +25,4 @@ export default defineConfig(({ mode }) => ({
       ]
     }
   }
-}));
+});
