@@ -23,7 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import { NgModule } from '@angular/core';
+import { NgModule, provideExperimentalZonelessChangeDetection } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser'
 
 import { AppComponent } from './app.component'
@@ -42,7 +42,7 @@ import { Sample } from './components/sample/sample.component';
     ErrorPage,
     Sample
   ],
-  providers: [],
+  providers: [provideExperimentalZonelessChangeDetection()],
   bootstrap: [AppComponent]
 })
 export class AppModule {
