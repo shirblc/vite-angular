@@ -14,9 +14,6 @@ export default defineConfig({
       },
     }
   },
-  optimizeDeps: {
-    include: ['@angular/compiler']
-  },
   build: {
     sourcemap: true,
     rollupOptions: {
