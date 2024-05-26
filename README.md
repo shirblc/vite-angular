@@ -50,19 +50,18 @@ Built from the [angular-gulp](https://github.com/shirblc/angular-gulp) repo.
 7. **@angular/platform-browser** - Everything DOM and browser-related.
 8. **@angular/platform-browser-dynamic** - Providers and methods for compiling and running the app.
 9. **@angular/router** - Angular's router module.
-10. **rxjs** - Contains an implementation of observables, which many Angular APIs use.
-11. **zone.js** - Implementation of zones for JavaScript (used by Angular).
-12. **core-js** - Modular standard library for JavaScript. Contains polyfills. For more information, check the [GitHub repo](https://github.com/zloirock/core-js).
+10. **rxjs** - Contains an implementation of observables, which many Angular APIs use. For more information, check the [rxjs website](https://rxjs.dev).
+11. **reflect-metadata** - Contains an implementation of the reflect-metadata proposal (for decorators). Installed as one of Angular's dependencies. For more information, check the [reflect-metadata repository](https://github.com/rbuckton/reflect-metadata).
 
-For more information about Angular's required NPM packages, check the [Angular docs](https://angular.io/guide/npm-packages).
+For more information about Angular's required NPM packages, check the [Angular docs](https://angular.dev).
 
 ## Everything else
 
 1. **Vite** - Vite is a fast, feature-rich front-end development environment, which handles everything from development to deployment. In this app, it's used to power up the development server, handle the environment variables and build the app for production. For more information, view the [Vite documentation](https://vitejs.dev/).
 2. **TypeScript** - TypeScript is a superset of JavaScript, with added features and updated syntax (including, but not limited to, typing). It's the language the app is built in (before Vite compiles it back to JavaScript). For more information, view the [TypeScript docuemntation](https://www.typescriptlang.org/).
 3. **@rollup/plugin-typescript** - Rollup's TypeScript plugin. Used to compile the decorators Angular uses while maintaining metadata. For more information, view the [plugin's NPM page](https://www.npmjs.com/package/@rollup/plugin-typescript).
-4. **magic-string** -
-5. **Less** - 
+4. **magic-string** - A helper for making modifications to text and generating source maps to track those modifications. For more information, check the [magic-string repository](https://github.com/rich-harris/magic-string).
+5. **Less** - Less is used as the CSS pre-processor for the app. For more information, view the [LESS documentation](https://lesscss.org).
 
 ### Testing Dependencies
 
@@ -83,12 +82,6 @@ This project's tests are run using the Jasmine framework and the Karma runner. T
     - **karma-rollup-preprocessor** - A rollup preprocessor for karma, used to bundle up the tests. [NPM page.](https://www.npmjs.com/package/karma-rollup-preprocessor)
 3. **Cypress** - An open-source test runner, used primarily for e2e and integration tests. For more information, check their [official documentation](https://docs.cypress.io).
 
-### Production Dependencies
-
-1. **Express** - This project uses Express in order to run a basic server in deployment. This server is used to send the static files and script to the user. For more information, check the [Express website](https://expressjs.com).
-2. **Compression** - A Node extension used to compress production files when sending them from the Express server to the client. For more information, check the [compression NPM page](https://www.npmjs.com/package/compression).
-2. **dotenv** - A Node extension for accessing environment variables. Used by the frontend while in production mode. For more information, check the [dotenv NPM page](https://www.npmjs.com/package/dotenv).
-
 ## Testing
 
 ### Writing Tests
@@ -108,4 +101,3 @@ Running end-to-end tests is done through an npm script. Running `npm run e2e` in
 1. Chunking doesn't currently work in production.
 2. Not inlining the templates doesn't currently work either.
 3. Missing tests!
-4. Still requires core-js.
