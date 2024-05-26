@@ -27,7 +27,7 @@
   SOFTWARE.
 */
 
-import 'core-js/full/reflect';
+import 'reflect-metadata';
 import 'zone.js';
 import 'zone.js/testing';
 import { getTestBed } from '@angular/core/testing';

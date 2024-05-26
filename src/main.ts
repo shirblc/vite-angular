@@ -27,8 +27,7 @@
   SOFTWARE.
 */
 
-import 'core-js/full/reflect';
-import "@angular/compiler";
+import 'reflect-metadata';
 
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
