@@ -23,28 +23,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import { NgModule, provideExperimentalZonelessChangeDetection } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser'
+import { NgModule, provideExperimentalZonelessChangeDetection } from "@angular/core";
+import { BrowserModule } from "@angular/platform-browser";
 
-import { AppComponent } from './app.component'
-import { AppRoutingModule } from './app-routing.module'
-import { ErrorPage } from './components/errorPage/errorPage.component';
-import { Sample } from './components/sample/sample.component';
-
+import { AppComponent } from "./app.component";
+import { AppRoutingModule } from "./app-routing.module";
+import { ErrorPage } from "./components/errorPage/errorPage.component";
+import { Sample } from "./components/sample/sample.component";
 
 @NgModule({
-  imports: [
-    BrowserModule,
-    AppRoutingModule
-  ],
-  declarations: [
-    AppComponent,
-    ErrorPage,
-    Sample
-  ],
+  imports: [BrowserModule, AppRoutingModule],
+  declarations: [AppComponent, ErrorPage, Sample],
   providers: [provideExperimentalZonelessChangeDetection()],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule {
-
-}
+export class AppModule {}

@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
 
 interface ErrorMessage {
   title: string;
@@ -31,17 +31,15 @@ interface ErrorMessage {
 }
 
 @Component({
-  selector: 'app-error-page',
-  templateUrl: './errorPage.component.html'
+  selector: "app-error-page",
+  templateUrl: "./errorPage.component.html",
 })
 export class ErrorPage {
   error: ErrorMessage = {
-    title: '',
-    message: '',
-    code: 0
-  }
+    title: "",
+    message: "",
+    code: 0,
+  };
 
-  constructor() {
-
-  }
+  constructor() {}
 }

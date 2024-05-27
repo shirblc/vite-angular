@@ -22,19 +22,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html'
+  selector: "app-root",
+  templateUrl: "./app.component.html",
 })
 export class AppComponent {
-  navTabs = [{
-    name: 'Home',
-    link: '/'
-  }];
+  navTabs = [
+    {
+      name: "Home",
+      link: "/",
+    },
+  ];
 
-  constructor() {
-
-  }
+  constructor() {}
 }

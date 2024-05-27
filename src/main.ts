@@ -27,15 +27,15 @@
   SOFTWARE.
 */
 
-import 'reflect-metadata';
+import "reflect-metadata";
 
-import { enableProdMode } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { enableProdMode } from "@angular/core";
+import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 
-import { AppModule } from './app/app.module';
+import { AppModule } from "./app/app.module";
 
-if (import.meta.env["VITE_MODE"] == 'production') {
+if (import.meta.env["VITE_MODE"] == "production") {
   enableProdMode();
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule, {ngZone: "noop"});
+platformBrowserDynamic().bootstrapModule(AppModule, { ngZone: "noop" });

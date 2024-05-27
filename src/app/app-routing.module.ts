@@ -22,21 +22,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { NgModule } from "@angular/core";
+import { Routes, RouterModule } from "@angular/router";
 
-import { ErrorPage } from './components/errorPage/errorPage.component';
-import { Sample } from './components/sample/sample.component';
+import { ErrorPage } from "./components/errorPage/errorPage.component";
+import { Sample } from "./components/sample/sample.component";
 
 const routes: Routes = [
-  { path: '', component: Sample },
-  { path: '**', component: ErrorPage }
+  { path: "", component: Sample },
+  { path: "**", component: ErrorPage },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule {
-
-}
+export class AppRoutingModule {}

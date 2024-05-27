@@ -22,19 +22,17 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class SampleService {
-  constructor() {
-
-  }
+  constructor() {}
 
   logService() {
     console.log("this is a sample service!");
 
-    return 'logged!';
+    return "logged!";
   }
 }

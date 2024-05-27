@@ -2,6 +2,8 @@
 
 An Angular template using Vite for development and build.
 
+Comes with LESS as a CSS pre-processor and prettier for code formatting.
+
 ## Version
 
 Version 0.
@@ -18,8 +20,8 @@ Built from the [angular-gulp](https://github.com/shirblc/angular-gulp) repo.
 
 1. Download or clone the repo.
 2. cd into the project directory.
-3. Run ```npm install``` to install dependencies.
-4. Run ```npm run dev``` to compile for the files for local development.
+3. Run `npm install` to install dependencies.
+4. Run `npm run dev` to compile for the files for local development.
 5. Open localhost:5173.
 
 ## Contents
@@ -53,7 +55,7 @@ Built from the [angular-gulp](https://github.com/shirblc/angular-gulp) repo.
 10. **rxjs** - Contains an implementation of observables, which many Angular APIs use. For more information, check the [rxjs website](https://rxjs.dev).
 11. **reflect-metadata** - Contains an implementation of the reflect-metadata proposal (for decorators). Installed as one of Angular's dependencies. For more information, check the [reflect-metadata repository](https://github.com/rbuckton/reflect-metadata).
 
-For more information about Angular's required NPM packages, check the [Angular docs](https://angular.dev).
+For more information about Angular's required NPM packages, check the [Angular docs](https://angular.dev/reference/configs/npm-packages).
 
 ## Everything else
 
@@ -68,18 +70,18 @@ For more information about Angular's required NPM packages, check the [Angular d
 This project's tests are run using the Jasmine framework and the Karma runner. Thus, testing requires several packages:
 
 1. **Jasmine** - An open-source behaviour-driven testing framework. For more information, check Jasmine's [official site](https://jasmine.github.io). Included packages:
-    - **jasmine-core**
-    - **jasmine-spec-reporter**
-    - **@types/jasmine** - A typed version, required in order to write TypeScript tests.
+   - **jasmine-core**
+   - **jasmine-spec-reporter**
+   - **@types/jasmine** - A typed version, required in order to write TypeScript tests.
 2. **Karma** - An open-source test-runner, used to run the tests on various devices with a test server. For more information, check Karma's [official site](https://karma-runner.github.io/latest/index.html). Included packages:
-    - **karma**
-    - **karma-jasmine** - A Karma adapter for the Jasmine framework. [Project repo.](https://github.com/karma-runner/karma-jasmine)
-    - **karma-jasmine-html-reporter** - A reporter that shows test results in HTML. [NPM page.](https://www.npmjs.com/package/karma-jasmine-html-reporter).
-    - **karma-chrome-launcher** - A launcher for Chrome, Chrome Canary and Chromuim. [Project repo.](https://github.com/karma-runner/karma-chrome-launcher).
-    - **karma-coverage** - Code coverage generator. [Project repo.](https://github.com/karma-runner/karma-coverage)
-    - **karma-coverage-istanbul-reporter** - Code coverage generator reporter. [NPM page.](https://www.npmjs.com/package/karma-coverage-istanbul-reporter)
-    - **karma-sourcemap-loader** - A preprocessor that loads existing source maps. [NPM page.](https://www.npmjs.com/package/karma-sourcemap-loader)
-    - **karma-rollup-preprocessor** - A rollup preprocessor for karma, used to bundle up the tests. [NPM page.](https://www.npmjs.com/package/karma-rollup-preprocessor)
+   - **karma**
+   - **karma-jasmine** - A Karma adapter for the Jasmine framework. [Project repo.](https://github.com/karma-runner/karma-jasmine)
+   - **karma-jasmine-html-reporter** - A reporter that shows test results in HTML. [NPM page.](https://www.npmjs.com/package/karma-jasmine-html-reporter).
+   - **karma-chrome-launcher** - A launcher for Chrome, Chrome Canary and Chromuim. [Project repo.](https://github.com/karma-runner/karma-chrome-launcher).
+   - **karma-coverage** - Code coverage generator. [Project repo.](https://github.com/karma-runner/karma-coverage)
+   - **karma-coverage-istanbul-reporter** - Code coverage generator reporter. [NPM page.](https://www.npmjs.com/package/karma-coverage-istanbul-reporter)
+   - **karma-sourcemap-loader** - A preprocessor that loads existing source maps. [NPM page.](https://www.npmjs.com/package/karma-sourcemap-loader)
+   - **karma-rollup-preprocessor** - A rollup preprocessor for karma, used to bundle up the tests. [NPM page.](https://www.npmjs.com/package/karma-rollup-preprocessor)
 3. **Cypress** - An open-source test runner, used primarily for e2e and integration tests. For more information, check their [official documentation](https://docs.cypress.io).
 
 ## Testing

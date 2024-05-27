@@ -27,19 +27,16 @@
   SOFTWARE.
 */
 
-import 'reflect-metadata';
-import 'zone.js';
-import 'zone.js/testing';
-import { getTestBed } from '@angular/core/testing';
+import "reflect-metadata";
+import "zone.js";
+import "zone.js/testing";
+import { getTestBed } from "@angular/core/testing";
 import {
   BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting
-} from '@angular/platform-browser-dynamic/testing';
-import './app/app.module';
+  platformBrowserDynamicTesting,
+} from "@angular/platform-browser-dynamic/testing";
+import "./app/app.module";
 // test-placeholder
 
 // First, initialize the Angular testing environment.
-getTestBed().initTestEnvironment(
-  BrowserDynamicTestingModule,
-  platformBrowserDynamicTesting()
-);
+getTestBed().initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());

@@ -22,15 +22,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import { Component } from '@angular/core';
-import { SampleService } from '../../services/sample.service';
+import { Component } from "@angular/core";
+import { SampleService } from "../../services/sample.service";
 
 @Component({
-  selector: 'app-sample',
-  templateUrl: './sample.component.html'
+  selector: "app-sample",
+  templateUrl: "./sample.component.html",
 })
 export class Sample {
-
   constructor(private sampleService: SampleService) {
     this.sampleService.logService();
   }
