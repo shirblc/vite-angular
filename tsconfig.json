@@ -27,7 +27,8 @@
       "@app/*": ["./src/app/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src/**/*.ts"],
+  "exclude": ["e2e/tsconfig.json"],
   "angularCompilerOptions": {
     "enableIvy": true,
     "enableResourceInlining": false,
