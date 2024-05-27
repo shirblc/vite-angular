@@ -29,6 +29,7 @@
 
 import "reflect-metadata";
 import "@angular/compiler";
+import "zone.js";
 
 import { enableProdMode } from "@angular/core";
 
