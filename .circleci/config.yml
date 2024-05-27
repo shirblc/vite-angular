@@ -12,8 +12,7 @@ jobs:
     steps:
       - checkout
       - run: sudo apt-get update
-      - browser-tools/install-browser-tools:
-          chrome-version: 120.0.6099.62 # temporary, until https://github.com/CircleCI-Public/browser-tools-orb/issues/104 is fixed
+      - browser-tools/install-browser-tools
       - run: google-chrome --version
       - restore_cache:
           key: my-project-{{ .Branch }}-{{ checksum "package-lock.json" }}
@@ -33,8 +32,7 @@ jobs:
      steps:
        - checkout
        - run: sudo apt-get update
-       - browser-tools/install-browser-tools:
-          chrome-version: 120.0.6099.62 # temporary, until https://github.com/CircleCI-Public/browser-tools-orb/issues/104 is fixed
+       - browser-tools/install-browser-tools
        - run: google-chrome --version
        - cypress/install
        - restore_cache:
