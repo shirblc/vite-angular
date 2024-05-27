@@ -1,5 +1,11 @@
 # Vite-Angular
 
+[![CircleCI](https://circleci.com/gh/shirblc/vite-angular.svg?style=shield)](https://circleci.com/gh/shirblc/vite-angular.svg)
+[![codecov](https://codecov.io/gh/shirblc/vite-angular/graph/badge.svg)](https://codecov.io/gh/shirblc/vite-angular)
+[![Known Vulnerabilities](https://snyk.io/test/github/shirblc/vite-angular/badge.svg)](https://snyk.io/test/github/shirblc/vite-angular)
+[![Depfu](https://badges.depfu.com/badges/e20a0ba27793d4f06dda512f7cec415a/overview.svg)](https://depfu.com/github/shirblc/vite-angular?project_id=40212)
+[![Depfu](https://badges.depfu.com/badges/e20a0ba27793d4f06dda512f7cec415a/count.svg)](https://depfu.com/github/shirblc/vite-angular?project_id=40212)
+
 An Angular template using Vite for development and build.
 
 Comes with LESS as a CSS pre-processor and prettier for code formatting.
