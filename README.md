@@ -53,7 +53,8 @@ Built from the [angular-gulp](https://github.com/shirblc/angular-gulp) repo.
 8. **@angular/platform-browser-dynamic** - Providers and methods for compiling and running the app.
 9. **@angular/router** - Angular's router module.
 10. **rxjs** - Contains an implementation of observables, which many Angular APIs use. For more information, check the [rxjs website](https://rxjs.dev).
-11. **reflect-metadata** - Contains an implementation of the reflect-metadata proposal (for decorators). Installed as one of Angular's dependencies. For more information, check the [reflect-metadata repository](https://github.com/rbuckton/reflect-metadata).
+11. **zone.js** - Implementation of zones for JavaScript (used by Angular).
+12. **reflect-metadata** - Contains an implementation of the reflect-metadata proposal (for decorators). Installed as one of Angular's dependencies. For more information, check the [reflect-metadata repository](https://github.com/rbuckton/reflect-metadata).
 
 For more information about Angular's required NPM packages, check the [Angular docs](https://angular.dev/reference/configs/npm-packages).
 
@@ -86,13 +87,13 @@ This project's tests are run using the Jasmine framework and the Karma runner. T
 
 ### Writing Tests
 
-Tests are written in TypeScript and each component's tests are located in the same directory as the component. Test files' names follow this format: `<component_name>.spec.ts`. This format is the way tests are picked up by the main testing file, and so it's important to keep to it.
+Tests are written in TypeScript and each component's tests are located in the same directory as the component. Test files' names follow this format: `<component_name>.spec.ts`. This format is the way tests are picked up by the test runner. (Alternatively, if you wish to use another format, you can update the `files` pattern in `web-test-runner.config.mjs`.)
 
 End-to-end tests are also written in TypeScript. All end-to-end tests are located in [e2e/src](./e2e/src), and are named in a similar manner to regular specs files: `<something_to_test>.spec.ts`. The Cypress config is in the root (in `cypress.json`), but the plugins and support files are in the [e2e](./e2e) folder as well.
 
 ### Running Tests
 
-Running tests is done through the dedicated Gulp task. All you need to do is run `gulp test` in the terminal; this will start Karma and trigger Rollup's compilation of tests and project files.
+Running tests is done through the dedicated npm script. All you need to do is run `npm test` in the terminal; this will start Web Test Runner's testing process.
 
 Running end-to-end tests is done through an npm script. Running `npm run e2e` in the terminal will bundle up assets for testing, fire up the development server and run Cypress.
 
