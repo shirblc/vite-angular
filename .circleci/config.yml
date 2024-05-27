@@ -22,6 +22,7 @@ jobs:
           key: my-project-{{ .Branch }}-{{ checksum "package-lock.json" }}
           paths:
             - "node_modules"
+      - run: npx playwright install
       - run: npm test
       - codecov/upload
   e2e:
@@ -45,6 +46,10 @@ jobs:
            key: my-project-{{ .Branch }}-{{ checksum "package-lock.json" }}
            paths:
              - "node_modules"
+       - run:
+          name: Start Vite
+          command: npm run dev
+          background: true
        - run:
            name: Run e2e tests
            command: npm run e2e
