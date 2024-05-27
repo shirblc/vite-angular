@@ -95,7 +95,7 @@ End-to-end tests are also written in TypeScript. All end-to-end tests are locate
 
 Running tests is done through the dedicated npm script. All you need to do is run `npm test` in the terminal; this will start Web Test Runner's testing process.
 
-Running end-to-end tests is done through an npm script. Running `npm run e2e` in the terminal will start the Vite dev server and run Cypress. Alternatively, if you already have the dev server running, you can run `npm run cypress`.
+Running end-to-end tests is done through an npm script. Running `npm run cypress` in the terminal will run Cypress (make sure the Vite dev server is already running before you do that).
 
 ## Known Issues
 
