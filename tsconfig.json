@@ -22,7 +22,10 @@
     "noFallthroughCasesInSwitch": true,
     "declaration": false,
     "noPropertyAccessFromIndexSignature": true,
-    "importHelpers": true
+    "importHelpers": true,
+    "paths": {
+      "@app/*": ["./src/app/*"]
+    }
   },
   "include": ["src"],
   "angularCompilerOptions": {

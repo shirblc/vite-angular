@@ -23,7 +23,7 @@ SOFTWARE.
 */
 
 import { Component } from "@angular/core";
-import { SampleService } from "../../services/sample.service";
+import { SampleService } from "@app/services/sample.service";
 
 @Component({
   selector: "app-sample",

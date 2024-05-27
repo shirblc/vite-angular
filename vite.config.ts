@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import typescript from "@rollup/plugin-typescript";
 import { ReplaceTemplateUrlPlugin, TranspileDecoratorsVite } from "./plugins";
+import * as path from "path";
 
 export default defineConfig({
   plugins: [ReplaceTemplateUrlPlugin(), TranspileDecoratorsVite()],
@@ -15,6 +16,11 @@ export default defineConfig({
     sourcemap: true,
     rollupOptions: {
       plugins: [typescript({ tsconfig: "./tsconfig.json", exclude: ["**/*.spec.ts", "e2e/**/*"] })],
+    },
+  },
+  resolve: {
+    alias: {
+      "@app": path.resolve(__dirname, "./src/app"),
     },
   },
 });
