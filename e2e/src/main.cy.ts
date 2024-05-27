@@ -25,7 +25,7 @@ SOFTWARE.
 describe("Angular-Gulp App", function () {
   it("should have a title", function () {
     cy.visit("http://localhost:5173/");
-    cy.title().should("equal", "Untitled Document");
+    cy.title().should("equal", "Vite + Angular");
     cy.get("#mainTitle").should("have.text", "Title");
     cy.get("app-sample").should("be.visible").should("not.be.undefined");
   });
