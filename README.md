@@ -73,15 +73,13 @@ This project's tests are run using the Jasmine framework and the Karma runner. T
    - **jasmine-core**
    - **jasmine-spec-reporter**
    - **@types/jasmine** - A typed version, required in order to write TypeScript tests.
-2. **Karma** - An open-source test-runner, used to run the tests on various devices with a test server. For more information, check Karma's [official site](https://karma-runner.github.io/latest/index.html). Included packages:
-   - **karma**
-   - **karma-jasmine** - A Karma adapter for the Jasmine framework. [Project repo.](https://github.com/karma-runner/karma-jasmine)
-   - **karma-jasmine-html-reporter** - A reporter that shows test results in HTML. [NPM page.](https://www.npmjs.com/package/karma-jasmine-html-reporter).
-   - **karma-chrome-launcher** - A launcher for Chrome, Chrome Canary and Chromuim. [Project repo.](https://github.com/karma-runner/karma-chrome-launcher).
-   - **karma-coverage** - Code coverage generator. [Project repo.](https://github.com/karma-runner/karma-coverage)
-   - **karma-coverage-istanbul-reporter** - Code coverage generator reporter. [NPM page.](https://www.npmjs.com/package/karma-coverage-istanbul-reporter)
-   - **karma-sourcemap-loader** - A preprocessor that loads existing source maps. [NPM page.](https://www.npmjs.com/package/karma-sourcemap-loader)
-   - **karma-rollup-preprocessor** - A rollup preprocessor for karma, used to bundle up the tests. [NPM page.](https://www.npmjs.com/package/karma-rollup-preprocessor)
+2. **Web Test Runner** - An open-source test-runner, used to run the tests on various devices with a test server. For more information, check web-test-runner's [official site](https://modern-web.dev/docs/test-runner/overview/). Included packages:
+   - **@web/test-runner**
+   - **@web/dev-server-esbuild** - An esbuild plugin for web-test-runner's dev server. Used for test compilation.
+   - **@web/dev-server-rollup** - A rollup plugin for web-test-runner's dev server. Used for test compilation.
+   - **@web/test-runner-playwright** - A test runner using playwright. Used to run the tests in the browser.
+   - **rollup-plugin-tsconfig-paths** - A rollup plugin for resolving tsconfig paths. For more information, check the plugin's [npm page](https://www.npmjs.com/package/rollup-plugin-tsconfig-paths).
+   - **web-test-runner-jasmine** - A web-test-runner plugin for using Jasmine as the testing framework. For more information, check the [plugin's repository](https://github.com/blueprintui/web-test-runner-jasmine).
 3. **Cypress** - An open-source test runner, used primarily for e2e and integration tests. For more information, check their [official documentation](https://docs.cypress.io).
 
 ## Testing
@@ -102,4 +100,5 @@ Running end-to-end tests is done through an npm script. Running `npm run e2e` in
 
 1. Chunking doesn't currently work in production.
 2. Not inlining the templates doesn't currently work either.
-3. Missing tests!
+3. The built app still runs in JIT. Need to figure out how to run compilation AOT.
+4. In certain circumstances, if the final test run fails, test execution hangs.
