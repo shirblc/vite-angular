@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "format": "prettier .  --write",
     "cypress": "cypress run",
+    "e2e": "npm run dev && npm run cypress",
     "test": "web-test-runner"
   },
   "devDependencies": {
