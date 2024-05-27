@@ -8,7 +8,7 @@
 
 An Angular template using Vite for development and build.
 
-Comes with LESS as a CSS pre-processor and prettier for code formatting.
+Comes with LESS as a CSS pre-processor, prettier for code formatting, web-test-runner and Jasmine for unit tests, and Cypress for e2e tests.
 
 ## Version
 
@@ -108,4 +108,6 @@ Running end-to-end tests is done through an npm script. Running `npm run cypress
 1. Chunking doesn't currently work in production.
 2. Not inlining the templates doesn't currently work either.
 3. The built app still runs in JIT. Need to figure out how to run compilation AOT.
-4. In certain circumstances, if the final test run fails, test execution hangs.
+4. In certain circumstances, if the final test run fails, test execution hangs. (Needs further investigation)
+5. The Vite dev server doesn't refresh the compiled JS properly when changes are made to the HTML.
+   - The workaround for now is to save any of the TypeScript files; that kicks compilation off immediately
