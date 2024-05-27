@@ -27,17 +27,11 @@
   SOFTWARE.
 */
 
-import "reflect-metadata";
-import "@angular/compiler";
+import { ApplicationConfig, provideExperimentalZonelessChangeDetection } from "@angular/core";
+import { provideRouter } from "@angular/router";
 
-import { enableProdMode } from "@angular/core";
+import { routes } from "./app.routes";
 
-import { bootstrapApplication } from "@angular/platform-browser";
-import { AppComponent } from "./app/app.component";
-import { appConfig } from "./app/app.config";
-
-if (import.meta.env["VITE_MODE"] == "production") {
-  enableProdMode();
-}
-
-bootstrapApplication(AppComponent, appConfig).catch((error) => console.log(error));
+export const appConfig: ApplicationConfig = {
+  providers: [provideExperimentalZonelessChangeDetection(), provideRouter(routes)],
+};

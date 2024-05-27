@@ -27,17 +27,12 @@
   SOFTWARE.
 */
 
-import "reflect-metadata";
-import "@angular/compiler";
+import { Routes } from "@angular/router";
 
-import { enableProdMode } from "@angular/core";
+import { ErrorPage } from "./components/errorPage/errorPage.component";
+import { Sample } from "./components/sample/sample.component";
 
-import { bootstrapApplication } from "@angular/platform-browser";
-import { AppComponent } from "./app/app.component";
-import { appConfig } from "./app/app.config";
-
-if (import.meta.env["VITE_MODE"] == "production") {
-  enableProdMode();
-}
-
-bootstrapApplication(AppComponent, appConfig).catch((error) => console.log(error));
+export const routes: Routes = [
+  { path: "", component: Sample },
+  { path: "**", component: ErrorPage },
+];

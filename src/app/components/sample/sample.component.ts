@@ -28,6 +28,7 @@ import { SampleService } from "../../services/sample.service";
 @Component({
   selector: "app-sample",
   templateUrl: "./sample.component.html",
+  standalone: true,
 })
 export class Sample {
   constructor(private sampleService: SampleService) {

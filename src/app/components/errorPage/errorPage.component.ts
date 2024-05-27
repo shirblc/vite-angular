@@ -33,6 +33,7 @@ interface ErrorMessage {
 @Component({
   selector: "app-error-page",
   templateUrl: "./errorPage.component.html",
+  standalone: true,
 })
 export class ErrorPage {
   error: ErrorMessage = {
