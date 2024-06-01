@@ -63,19 +63,21 @@ export function ReplaceTemplateUrlPlugin(
      * @param code - the code passed in by Rollup.
      * @returns the updated code and the sourcemap.
      */
-    transform(code) {
+    transform(code: string, id: string) {
       const magicString = new MagicString(code);
 
       magicString.replace(/(templateUrl:)(.*)(.component.html")/, (match) => {
+        // Get the absolute URL to the component
+        const directoryUrlMatch = id.match(/\/([a-zA-Z])+\.component.ts/);
+        let directoryUrl: string = "./src/app";
+        if (directoryUrlMatch) directoryUrl = id.substring(0, directoryUrlMatch.index);
+
         const component = match.match(/(\.\/)(.*)(\.component\.html)/);
         if (!component) return match;
         const componentName = component[2];
         if (componentName == "my") return match;
 
-        const componentTemplateURL =
-          componentName == "app"
-            ? `${__dirname}/src/app/${componentName}.component.html`
-            : `${__dirname}/src/app/components/${componentName}/${componentName}.component.html`;
+        const componentTemplateURL = `${directoryUrl}/${componentName}.component.html`;
 
         if (!config.inlineTemplates && config.newParentFolder) {
           if (!config.keepFolderStructure) return match.replace("./", config.newParentFolder);
