@@ -12,6 +12,7 @@
     "test": "web-test-runner"
   },
   "devDependencies": {
+    "@babel/core": "^7.24.7",
     "@rollup/plugin-typescript": "^11.1.6",
     "@types/jasmine": "^5.1.4",
     "@types/node": "^20.12.12",
