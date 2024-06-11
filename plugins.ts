@@ -134,6 +134,8 @@ export function BuildAngularPlugin(): Plugin {
 
       const magicString = new MagicString(sourceFile.text);
 
+      // While the addAngularLinkerPlugin doesn't work, this at least
+      // allows running the app in dev mode.
       if (id.includes("main.ts") && isDev) {
         magicString.prepend("import '@angular/compiler';");
       }

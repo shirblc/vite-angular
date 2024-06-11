@@ -107,3 +107,4 @@ Running end-to-end tests is done through an npm script. Running `npm run cypress
 1. In certain circumstances, if the final test run fails, test execution hangs. (Needs further investigation)
 2. The Vite dev server doesn't refresh the compiled JS properly when changes are made to the HTML.
    - The workaround for now is to save any of the TypeScript files; that kicks compilation off immediately
+3. The Angular Linker Vite plugin doesn't work at the moment. Getting it to work will allow removing the Angular compiler import in dev mode and replacing the Rollup Babel plugin in prod.
