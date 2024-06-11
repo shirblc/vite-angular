@@ -28,137 +28,167 @@
 */
 
 import MagicString from "magic-string";
-import fs, { readFileSync } from "fs";
 import { Plugin } from "vite";
-import typescript from "typescript";
-const { transpileModule } = typescript;
-
-interface ReplacerConfig {
-  inlineTemplates: boolean;
-  newParentFolder?: string;
-  keepFolderStructure?: boolean;
-}
+import {
+  CompilerHost as ngCompilerHost,
+  CompilerOptions as ngCompilerOptions,
+  createCompilerHost,
+  createProgram,
+  NgtscProgram,
+  readConfiguration,
+} from "@angular/compiler-cli";
+import { transformAsync } from "@babel/core";
+import defaultLinkerPlugin from "@angular/compiler-cli/linker/babel";
+import ts from "typescript";
+import * as tsconfig from "./tsconfig.json";
 
 /**
- * Replaces the templateUrl in an Angular component, either with an inlined plugin or with a new URL.
- * Originally written as a Browserify transform: https://github.com/shirblc/angular-gulp/pull/1
- * and later as rollup plugin:
- * https://github.com/shirblc/angular-gulp/blob/main/processor.js#L17
- *
- * @param config Optional configuration for the templates. Contains the following options:
- *  - inlineTemplates - boolean - Whether or not to inline the templates in the final JavaScript bundle.
- *  - newParentFolder - string - The new folder to copy the templates to (starting with "/")
- *  - keepFolderStructure - boolean - Whether to maintain Angular's default "/src/app/components/<name>"
- *                                    structure or to put all HTML files in the same folder.
+ * A plugin that runs the Angular compiler in order to build the app.
+ * @returns A Vite plugin for building the app.
  */
-export function ReplaceTemplateUrlPlugin(
-  config: ReplacerConfig = { inlineTemplates: true },
-): Plugin {
+export function BuildAngularPlugin(): Plugin {
+  let isDev = false;
+  let compilerHost: ngCompilerHost;
+  let compilerOptions: ngCompilerOptions;
+  let currentAngularProgram: NgtscProgram;
+  let tsHost: ts.CompilerHost;
+  let builder: ts.BuilderProgram;
+  let rootFiles: string[];
+
+  async function validateFiles() {
+    await currentAngularProgram.compiler.analyzeAsync();
+    const diagnostics = currentAngularProgram.compiler.getDiagnostics();
+    const res = ts.formatDiagnosticsWithColorAndContext(diagnostics, tsHost);
+
+    if (res) console.warn(res);
+
+    return res;
+  }
+
   return {
-    name: "vite-plugin-template-url-replacement",
+    name: "vite-build-angular",
+    enforce: "pre",
+
     /**
-     * Transform hook for Rollup.
-     * Transforms the Template URL into a new URL or the inlined template,
-     * depending on the user's configuration.
-     * @param code - the code passed in by Rollup.
-     * @returns the updated code and the sourcemap.
+     * Vite's config hook. Used to handle the TypeScript config,
+     * the Angular compiler config, and to perform a check for whether
+     * we're in development or in production.
      */
-    transform(code: string, id: string) {
-      const magicString = new MagicString(code);
-
-      magicString.replace(/(templateUrl:)(.*)(.component.html")/, (match) => {
-        // Get the absolute URL to the component
-        const directoryUrlMatch = id.match(/\/([a-zA-Z])+\.component.ts/);
-        let directoryUrl: string = "./src/app";
-        if (directoryUrlMatch) directoryUrl = id.substring(0, directoryUrlMatch.index);
-
-        const component = match.match(/(\.\/)(.*)(\.component\.html)/);
-        if (!component) return match;
-        const componentName = component[2];
-        if (componentName == "my") return match;
-
-        const componentTemplateURL = `${directoryUrl}/${componentName}.component.html`;
-
-        if (!config.inlineTemplates && config.newParentFolder) {
-          if (!config.keepFolderStructure) return match.replace("./", config.newParentFolder);
-          else
-            return componentName == "app"
-              ? match.replace("./", `/${config.newParentFolder}`)
-              : match.replace(`./`, `/components/${componentName}/${config.newParentFolder}`);
-        } else {
-          if (!config.inlineTemplates)
-            console.log(
-              "Inline templates option is false but no parent folder has been provided. Inlining the templates instead.",
-            );
-
-          const componentTemplate = fs.readFileSync(componentTemplateURL);
-          return `template: \`${componentTemplate}\``;
-        }
+    config(_config, env) {
+      isDev = env.command == "serve";
+      const { options, rootNames: parsedFiles } = readConfiguration("./tsconfig.json", {
+        noEmit: false,
       });
+      compilerOptions = options;
+      rootFiles = parsedFiles;
+    },
+
+    /**
+     * Vite's build start hook. Is used to initialise the TypeScript compiler
+     * host and builder, as well as the Angular compiler.
+     */
+    async buildStart(_options) {
+      tsHost = ts.createCompilerHost(tsconfig["compilerOptions"] as any);
+      compilerHost = createCompilerHost({
+        options: { ...compilerOptions },
+        tsHost,
+      });
+      currentAngularProgram = createProgram({
+        rootNames: rootFiles,
+        options: compilerOptions,
+        host: compilerHost,
+      }) as NgtscProgram;
+      // Credit to @nitedani for the next four lines
+      // https://github.com/nitedani/vite-plugin-angular
+      const typeScriptProgram = currentAngularProgram.getTsProgram();
+      builder = ts.createAbstractBuilder(typeScriptProgram, tsHost);
+
+      const validateResult = await validateFiles();
+
+      if (validateResult) {
+        process.exit(1);
+      }
+    },
+
+    /**
+     * Vite's transform hook. Performs the actual transformation of the
+     * Angular code using the Compiler created in the buildStart hook.
+     */
+    async transform(_code, id, _options) {
+      // Credit to @nitedani for most of the transform
+      // https://github.com/nitedani/vite-plugin-angular
+      const validateResult = await validateFiles();
+
+      if (validateResult && !isDev) {
+        process.exit(1);
+      }
+
+      const transformers = currentAngularProgram.compiler.prepareEmit();
+      let output: string = "";
+
+      if (!/\.[cm]?tsx?$/.test(id)) return;
+
+      const sourceFile = builder.getSourceFile(id);
+
+      if (!sourceFile) return;
+
+      const magicString = new MagicString(sourceFile.text);
+
+      if (id.includes("main.ts") && isDev) {
+        magicString.prepend("import '@angular/compiler';");
+      }
+
+      builder.emit(
+        sourceFile,
+        (_filename, data) => {
+          if (data) output = data;
+        },
+        undefined,
+        false,
+        transformers.transformers,
+      );
+
+      magicString.overwrite(0, magicString.length(), output);
 
       return {
         code: magicString.toString(),
         map: magicString.generateMap(),
       };
     },
-    // Based on: https://github.com/vite-pwa/vite-plugin-pwa/blob/main/src/plugins/dev.ts
-    /**
-     * configureServer hook for Vite.
-     * If the user chose not to inline the templates in development, serves the template
-     * files when requested.
-     * @param server - the Vite dev server
-     */
-    configureServer(server) {
-      server.middlewares.use((req, res, next) => {
-        if (req.url?.match(/\/(\w*)\.component\.html/)) {
-          const componentName = req.url.match(/\/(\w*)\.component\.html/)!;
-          const componentTemplateURL =
-            componentName[1] == "app"
-              ? `./src/app/${componentName[1]}.component.html`
-              : `./src/app/components/${componentName[1]}/${componentName[1]}.component.html`;
-
-          res.statusCode = 200;
-          res.setHeader("Content-Type", "text/html");
-          res.write(fs.readFileSync(componentTemplateURL), "utf-8");
-          res.end();
-        } else {
-          next();
-        }
-      });
-    },
   };
 }
 
 /**
- * A plugin for transpiling the TypeScript files (including the decorators).
- * Seeing as ESBuild doesn't support the experimental decorators, we need to
- * transpile the TypeScript decorators - and by extension whole files - ourselves.
- * This only applies in development, as the production build uses rollup.
+ * A plugin for applying the Angular linker plugin (using Babel).
+ * See https://angular.dev/tools/libraries/creating-libraries#consuming-partial-ivy-code-outside-the-angular-cli.
+ * Doesn't currently work!
  */
-export function TranspileDecoratorsVite(): Plugin {
+export function addAngularLinkerPlugin(): Plugin {
   return {
-    name: "vite-plugin-transpile-decorators",
+    name: "vite-add-angular-linker",
     enforce: "pre",
     apply: "serve",
-    transform(code, id) {
-      if (id.endsWith(".ts")) {
-        const magicString = new MagicString(code);
-        const tempString = magicString.toString();
-        const tsConfigString = readFileSync("./tsconfig.json", { encoding: "utf8" });
-        const compilerOptions = JSON.parse(tsConfigString)["compilerOptions"];
 
-        const transpiled = transpileModule(tempString, {
-          fileName: id,
-          compilerOptions,
-        });
+    async transform(code, id, _options) {
+      // add in the angular linker
+      // TODO: Figure out why this isn't working
+      // Filter out non-JS/TS files as they don't need to be linked
+      if (!/\.(js|ts)x?$/.test(id)) return;
 
-        magicString.overwrite(0, code.length, transpiled.outputText);
+      const finalResult = await transformAsync(code, {
+        filename: id,
+        sourceMaps: true,
+        configFile: false,
+        babelrc: false,
+        compact: false,
+        browserslistConfigFile: false,
+        plugins: [defaultLinkerPlugin],
+      });
 
-        return {
-          code: magicString.toString(),
-          map: magicString.generateMap(),
-        };
-      }
+      return {
+        code: finalResult?.code ?? "",
+        map: finalResult?.map,
+      };
     },
   };
 }

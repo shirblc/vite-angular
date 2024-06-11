@@ -1,10 +1,11 @@
 import { defineConfig } from "vite";
-import typescript from "@rollup/plugin-typescript";
-import { ReplaceTemplateUrlPlugin, TranspileDecoratorsVite } from "./plugins";
+import { BuildAngularPlugin } from "./plugins";
+import { babel } from "@rollup/plugin-babel";
+import defaultLinkerPlugin from "@angular/compiler-cli/linker/babel";
 import * as path from "path";
 
 export default defineConfig({
-  plugins: [ReplaceTemplateUrlPlugin(), TranspileDecoratorsVite()],
+  plugins: [BuildAngularPlugin()],
   css: {
     preprocessorOptions: {
       less: {
@@ -15,7 +16,7 @@ export default defineConfig({
   build: {
     sourcemap: true,
     rollupOptions: {
-      plugins: [typescript({ tsconfig: "./tsconfig.json", exclude: ["**/*.spec.ts", "e2e/**/*"] })],
+      plugins: [babel({ plugins: [defaultLinkerPlugin], babelHelpers: "bundled" })],
     },
   },
   resolve: {
