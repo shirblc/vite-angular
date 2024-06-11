@@ -60,7 +60,6 @@ Built from the [angular-gulp](https://github.com/shirblc/angular-gulp) repo.
 9. **@angular/router** - Angular's router module.
 10. **rxjs** - Contains an implementation of observables, which many Angular APIs use. For more information, check the [rxjs website](https://rxjs.dev).
 11. **zone.js** - Implementation of zones for JavaScript (used by Angular).
-12. **reflect-metadata** - Contains an implementation of the reflect-metadata proposal (for decorators). Installed as one of Angular's dependencies. For more information, check the [reflect-metadata repository](https://github.com/rbuckton/reflect-metadata).
 
 For more information about Angular's required NPM packages, check the [Angular docs](https://angular.dev/reference/configs/npm-packages).
 
@@ -68,7 +67,7 @@ For more information about Angular's required NPM packages, check the [Angular d
 
 1. **Vite** - Vite is a fast, feature-rich front-end development environment, which handles everything from development to deployment. In this app, it's used to power up the development server, handle the environment variables and build the app for production. For more information, view the [Vite documentation](https://vitejs.dev/).
 2. **TypeScript** - TypeScript is a superset of JavaScript, with added features and updated syntax (including, but not limited to, typing). It's the language the app is built in (before Vite compiles it back to JavaScript). For more information, view the [TypeScript docuemntation](https://www.typescriptlang.org/).
-3. **@rollup/plugin-typescript** - Rollup's TypeScript plugin. Used to compile the decorators Angular uses while maintaining metadata. For more information, view the [plugin's NPM page](https://www.npmjs.com/package/@rollup/plugin-typescript).
+3. **@rollup/plugin-babel** and **@babel/core** - Rollup's Babel plugin. Used to run the [Angular Linker plugin](https://angular.dev/tools/libraries/creating-libraries#consuming-partial-ivy-code-outside-the-angular-cli) to compile the app AOT. For more information, view the [plugin's NPM page](https://www.npmjs.com/package/@rollup/plugin-babel) and [Babel's docs](https://babeljs.io).
 4. **magic-string** - A helper for making modifications to text and generating source maps to track those modifications. For more information, check the [magic-string repository](https://github.com/rich-harris/magic-string).
 5. **Less** - Less is used as the CSS pre-processor for the app. For more information, view the [LESS documentation](https://lesscss.org).
 
@@ -105,9 +104,6 @@ Running end-to-end tests is done through an npm script. Running `npm run cypress
 
 ## Known Issues
 
-1. Chunking doesn't currently work in production.
-2. Not inlining the templates doesn't currently work either.
-3. The built app still runs in JIT. Need to figure out how to run compilation AOT.
-4. In certain circumstances, if the final test run fails, test execution hangs. (Needs further investigation)
-5. The Vite dev server doesn't refresh the compiled JS properly when changes are made to the HTML.
+1. In certain circumstances, if the final test run fails, test execution hangs. (Needs further investigation)
+2. The Vite dev server doesn't refresh the compiled JS properly when changes are made to the HTML.
    - The workaround for now is to save any of the TypeScript files; that kicks compilation off immediately
