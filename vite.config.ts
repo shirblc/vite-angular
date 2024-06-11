@@ -17,6 +17,13 @@ export default defineConfig({
     sourcemap: true,
     rollupOptions: {
       plugins: [babel({ plugins: [defaultLinkerPlugin], babelHelpers: "bundled" })],
+      output: {
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            return "vendor";
+          }
+        },
+      },
     },
   },
   resolve: {
