@@ -69,22 +69,8 @@ export function ReplaceTemplateUrlPlugin(config = { inlineTemplates: true }) {
         if (componentName == "my") return match;
 
         const componentTemplateURL = `${directoryUrl}/${componentName}.component.html`;
-
-        if (!config.inlineTemplates && config.newParentFolder) {
-          if (!config.keepFolderStructure) return match.replace("./", config.newParentFolder);
-          else
-            return componentName == "app"
-              ? match.replace("./", `/${config.newParentFolder}`)
-              : match.replace(`./`, `/components/${componentName}/${config.newParentFolder}`);
-        } else {
-          if (!config.inlineTemplates)
-            console.log(
-              "Inline templates option is false but no parent folder has been provided. Inlining the templates instead.",
-            );
-
-          const componentTemplate = fs.readFileSync(componentTemplateURL);
-          return `template: \`${componentTemplate}\``;
-        }
+        const componentTemplate = fs.readFileSync(componentTemplateURL);
+        return `template: \`${componentTemplate}\``;
       });
 
       return {
@@ -113,6 +99,7 @@ export function TranspileDecoratorsVite() {
         const tempString = magicString.toString();
         const tsConfigString = readFileSync("./tsconfig.json", { encoding: "utf8" });
         const compilerOptions = JSON.parse(tsConfigString)["compilerOptions"];
+        compilerOptions["emitDecoratorMetadata"] = true;
 
         const transpiled = transpileModule(tempString, {
           fileName: id,

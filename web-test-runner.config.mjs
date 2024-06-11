@@ -35,6 +35,7 @@ import { jasmineTestRunnerConfig } from "web-test-runner-jasmine";
 import { fileURLToPath } from "url";
 import tsConfigPaths from "rollup-plugin-tsconfig-paths";
 
+// TODO: Figure out how to replace these plugins with the angular compiler
 const templatePlugin = fromRollup(ReplaceTemplateUrlPlugin);
 const decoratorTranspiler = fromRollup(TranspileDecoratorsVite);
 const configPaths = fromRollup(tsConfigPaths);
