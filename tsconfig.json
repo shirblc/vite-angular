@@ -17,7 +17,7 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
+    "emitDecoratorMetadata": false,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "declaration": false,
@@ -25,13 +25,14 @@
     "importHelpers": true,
     "paths": {
       "@app/*": ["./src/app/*"]
-    }
+    },
+    "removeComments": true
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["e2e/tsconfig.json"],
+  "exclude": ["e2e/tsconfig.json", "src/**/*.spec.ts"],
   "angularCompilerOptions": {
     "enableIvy": true,
-    "enableResourceInlining": false,
+    "enableResourceInlining": true,
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,

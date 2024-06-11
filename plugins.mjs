@@ -54,66 +54,29 @@ export function ReplaceTemplateUrlPlugin(config = { inlineTemplates: true }) {
      * @param code - the code passed in by Rollup.
      * @returns the updated code and the sourcemap.
      */
-    transform(code) {
+    transform(code, id) {
       const magicString = new MagicString(code);
 
       magicString.replace(/(templateUrl:)(.*)(.component.html")/, (match) => {
+        // Get the absolute URL to the component
+        const directoryUrlMatch = id.match(/\/([a-zA-Z])+\.component.ts/);
+        let directoryUrl = "./src/app";
+        if (directoryUrlMatch) directoryUrl = id.substring(0, directoryUrlMatch.index);
+
         const component = match.match(/(\.\/)(.*)(\.component\.html)/);
         if (!component) return match;
         const componentName = component[2];
         if (componentName == "my") return match;
 
-        const componentTemplateURL =
-          componentName == "app"
-            ? `./src/app/${componentName}.component.html`
-            : `./src/app/components/${componentName}/${componentName}.component.html`;
-
-        if (!config.inlineTemplates && config.newParentFolder) {
-          if (!config.keepFolderStructure) return match.replace("./", config.newParentFolder);
-          else
-            return componentName == "app"
-              ? match.replace("./", `/${config.newParentFolder}`)
-              : match.replace(`./`, `/components/${componentName}/${config.newParentFolder}`);
-        } else {
-          if (!config.inlineTemplates)
-            console.log(
-              "Inline templates option is false but no parent folder has been provided. Inlining the templates instead.",
-            );
-
-          const componentTemplate = fs.readFileSync(componentTemplateURL);
-          return `template: \`${componentTemplate}\``;
-        }
+        const componentTemplateURL = `${directoryUrl}/${componentName}.component.html`;
+        const componentTemplate = fs.readFileSync(componentTemplateURL);
+        return `template: \`${componentTemplate}\``;
       });
 
       return {
         code: magicString.toString(),
         map: magicString.generateMap(),
       };
-    },
-    // Based on: https://github.com/vite-pwa/vite-plugin-pwa/blob/main/src/plugins/dev.ts
-    /**
-     * configureServer hook for Vite.
-     * If the user chose not to inline the templates in development, serves the template
-     * files when requested.
-     * @param server - the Vite dev server
-     */
-    configureServer(server) {
-      server.middlewares.use((req, res, next) => {
-        if (req.url?.match(/\/(\w*)\.component\.html/)) {
-          const componentName = req.url.match(/\/(\w*)\.component\.html/);
-          const componentTemplateURL =
-            componentName[1] == "app"
-              ? `./src/app/${componentName[1]}.component.html`
-              : `./src/app/components/${componentName[1]}/${componentName[1]}.component.html`;
-
-          res.statusCode = 200;
-          res.setHeader("Content-Type", "text/html");
-          res.write(fs.readFileSync(componentTemplateURL), "utf-8");
-          res.end();
-        } else {
-          next();
-        }
-      });
     },
   };
 }
@@ -136,6 +99,7 @@ export function TranspileDecoratorsVite() {
         const tempString = magicString.toString();
         const tsConfigString = readFileSync("./tsconfig.json", { encoding: "utf8" });
         const compilerOptions = JSON.parse(tsConfigString)["compilerOptions"];
+        compilerOptions["emitDecoratorMetadata"] = true;
 
         const transpiled = transpileModule(tempString, {
           fileName: id,
