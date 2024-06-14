@@ -134,11 +134,12 @@ export function BuildAngularPlugin(): Plugin {
 
       const magicString = new MagicString(sourceFile.text);
 
-      // While the addAngularLinkerPlugin doesn't work, this at least
-      // allows running the app in dev mode.
-      if (id.includes("main.ts") && isDev) {
-        magicString.prepend("import '@angular/compiler';");
-      }
+      // If the Babel Linker is too slow for you, you can uncomment
+      // the three lines below and the line setting the AngularLinkerPlugin
+      // to run in build only.
+      // if (id.includes("main.ts") && isDev) {
+      //   magicString.prepend("import '@angular/compiler';");
+      // }
 
       builder.emit(
         sourceFile,
@@ -163,23 +164,37 @@ export function BuildAngularPlugin(): Plugin {
 /**
  * A plugin for applying the Angular linker plugin (using Babel).
  * See https://angular.dev/tools/libraries/creating-libraries#consuming-partial-ivy-code-outside-the-angular-cli.
- * Doesn't currently work!
  */
-export function addAngularLinkerPlugin(): Plugin {
+export function AngularLinkerPlugin(): Plugin {
+  let isDev = false;
+
   return {
     name: "vite-add-angular-linker",
     enforce: "pre",
-    apply: "serve",
+    // If the Babel Linker is too slow for you, you can uncomment
+    // the three lines in the plugin above and the line below.
+    // apply: "build",
 
+    /**
+     * Vite's config hook. Used to perform a check for whether
+     * we're in development or in production.
+     */
+    config(_config, env) {
+      isDev = env.command == "serve";
+    },
+
+    /**
+     * Vite's transform hook. Used to run the Angular Linker Plugin
+     * on the relevant node modules.
+     */
     async transform(code, id, _options) {
-      // add in the angular linker
-      // TODO: Figure out why this isn't working
-      // Filter out non-JS/TS files as they don't need to be linked
-      if (!/\.(js|ts)x?$/.test(id)) return;
+      // Filter out non-node-modules files as they don't need to be linked
+      if (!id.includes("node_modules")) return;
 
+      // Add in the angular linker
       const finalResult = await transformAsync(code, {
         filename: id,
-        sourceMaps: true,
+        sourceMaps: isDev,
         configFile: false,
         babelrc: false,
         compact: false,

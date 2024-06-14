@@ -67,7 +67,7 @@ For more information about Angular's required NPM packages, check the [Angular d
 
 1. **Vite** - Vite is a fast, feature-rich front-end development environment, which handles everything from development to deployment. In this app, it's used to power up the development server, handle the environment variables and build the app for production. For more information, view the [Vite documentation](https://vitejs.dev/).
 2. **TypeScript** - TypeScript is a superset of JavaScript, with added features and updated syntax (including, but not limited to, typing). It's the language the app is built in (before Vite compiles it back to JavaScript). For more information, view the [TypeScript docuemntation](https://www.typescriptlang.org/).
-3. **@rollup/plugin-babel** and **@babel/core** - Rollup's Babel plugin. Used to run the [Angular Linker plugin](https://angular.dev/tools/libraries/creating-libraries#consuming-partial-ivy-code-outside-the-angular-cli) to compile the app AOT. For more information, view the [plugin's NPM page](https://www.npmjs.com/package/@rollup/plugin-babel) and [Babel's docs](https://babeljs.io).
+3. **@babel/core** - Used to run the [Angular Linker plugin](https://angular.dev/tools/libraries/creating-libraries#consuming-partial-ivy-code-outside-the-angular-cli) to compile the app AOT. For more information, view [Babel's docs](https://babeljs.io).
 4. **magic-string** - A helper for making modifications to text and generating source maps to track those modifications. For more information, check the [magic-string repository](https://github.com/rich-harris/magic-string).
 5. **Less** - Less is used as the CSS pre-processor for the app. For more information, view the [LESS documentation](https://lesscss.org).
 
@@ -104,7 +104,6 @@ Running end-to-end tests is done through an npm script. Running `npm run cypress
 
 ## Known Issues
 
-1. In certain circumstances, if the final test run fails, test execution hangs. (Needs further investigation)
+1. In certain circumstances, if the final test run fails, test execution hangs (Needs further investigation). Tests also need to use the same compilation process as dev/prod.
 2. The Vite dev server doesn't refresh the compiled JS properly when changes are made to the HTML.
    - The workaround for now is to save any of the TypeScript files; that kicks compilation off immediately
-3. The Angular Linker Vite plugin doesn't work at the moment. Getting it to work will allow removing the Angular compiler import in dev mode and replacing the Rollup Babel plugin in prod.

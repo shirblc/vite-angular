@@ -1,11 +1,9 @@
 import { defineConfig } from "vite";
-import { BuildAngularPlugin } from "./plugins";
-import { babel } from "@rollup/plugin-babel";
-import defaultLinkerPlugin from "@angular/compiler-cli/linker/babel";
+import { BuildAngularPlugin, AngularLinkerPlugin } from "./plugins";
 import * as path from "path";
 
 export default defineConfig({
-  plugins: [BuildAngularPlugin()],
+  plugins: [AngularLinkerPlugin(), BuildAngularPlugin()],
   css: {
     preprocessorOptions: {
       less: {
@@ -16,7 +14,6 @@ export default defineConfig({
   build: {
     sourcemap: true,
     rollupOptions: {
-      plugins: [babel({ plugins: [defaultLinkerPlugin], babelHelpers: "bundled" })],
       output: {
         manualChunks(id) {
           if (id.includes("node_modules")) {
