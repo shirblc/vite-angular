@@ -1,9 +1,13 @@
 import { defineConfig } from "vite";
-import { BuildAngularPlugin, AngularLinkerPlugin } from "./plugins";
+import { BuildAngularPlugin, AngularLinkerPlugin, GlobalStylesPlugin } from "./plugins";
 import * as path from "path";
 
 export default defineConfig({
-  plugins: [AngularLinkerPlugin(), BuildAngularPlugin()],
+  plugins: [
+    AngularLinkerPlugin(),
+    BuildAngularPlugin(),
+    GlobalStylesPlugin("src/styles", "main.less"),
+  ],
   css: {
     preprocessorOptions: {
       less: {
