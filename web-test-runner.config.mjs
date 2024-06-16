@@ -66,7 +66,7 @@ export default {
   },
   plugins: [
     configPaths({}),
-    templatePlugin({ inlineTemplates: true }),
+    templatePlugin(),
     decoratorTranspiler(),
     esbuildPlugin({
       target: "es2020",

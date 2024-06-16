@@ -30,21 +30,28 @@
 import MagicString from "magic-string";
 import fs, { readFileSync } from "fs";
 import typescript from "typescript";
+import less from "less";
 const { transpileModule } = typescript;
 
 /**
- * Replaces the templateUrl in an Angular component, either with an inlined plugin or with a new URL.
+ * Replaces the templateUrl and styleUrl in an Angular component with the inlined data.
  * Originally written as a Browserify transform: https://github.com/shirblc/angular-gulp/pull/1
  * and later as rollup plugin:
  * https://github.com/shirblc/angular-gulp/blob/main/processor.js#L17
- *
- * @param config Optional configuration for the templates. Contains the following options:
- *  - inlineTemplates - boolean - Whether or not to inline the templates in the final JavaScript bundle.
- *  - newParentFolder - string - The new folder to copy the templates to (starting with "/")
- *  - keepFolderStructure - boolean - Whether to maintain Angular's default "/src/app/components/<name>"
- *                                    structure or to put all HTML files in the same folder.
  */
-export function ReplaceTemplateUrlPlugin(config = { inlineTemplates: true }) {
+export function ReplaceTemplateUrlPlugin() {
+  /**
+   * Gets the path to the component's directory.
+   * @param {string} id - the ID of the file being processed.
+   * @returns - a string of the path to the component's directory.
+   */
+  function extractComponentDirectory(id) {
+    const directoryUrlMatch = id.match(/\/([a-zA-Z])+\.component.ts/);
+    let directoryUrl = "./src/app";
+    if (directoryUrlMatch) directoryUrl = id.substring(0, directoryUrlMatch.index);
+    return directoryUrl;
+  }
+
   return {
     name: "vite-plugin-template-url-replacement",
     /**
@@ -54,15 +61,12 @@ export function ReplaceTemplateUrlPlugin(config = { inlineTemplates: true }) {
      * @param code - the code passed in by Rollup.
      * @returns the updated code and the sourcemap.
      */
-    transform(code, id) {
+    async transform(code, id) {
       const magicString = new MagicString(code);
 
       magicString.replace(/(templateUrl:)(.*)(.component.html")/, (match) => {
         // Get the absolute URL to the component
-        const directoryUrlMatch = id.match(/\/([a-zA-Z])+\.component.ts/);
-        let directoryUrl = "./src/app";
-        if (directoryUrlMatch) directoryUrl = id.substring(0, directoryUrlMatch.index);
-
+        const directoryUrl = extractComponentDirectory(id);
         const component = match.match(/(\.\/)(.*)(\.component\.html)/);
         if (!component) return match;
         const componentName = component[2];
@@ -72,6 +76,25 @@ export function ReplaceTemplateUrlPlugin(config = { inlineTemplates: true }) {
         const componentTemplate = fs.readFileSync(componentTemplateURL);
         return `template: \`${componentTemplate}\``;
       });
+
+      const hasStylesheet = code.includes("styleUrl:");
+      let cssStyle = undefined;
+
+      if (hasStylesheet) {
+        // Get the absolute URL to the component
+        const directoryUrl = extractComponentDirectory(id);
+        const component = id.match(/(\.\/)(.*)(\.component\.ts)/);
+        if (component) {
+          const componentName = component[2];
+          if (componentName != "my") {
+            const componentStyleURL = `${directoryUrl}/${componentName}.component.less`;
+            const lessCode = fs.readFileSync(componentStyleURL, { encoding: "utf-8" });
+            cssStyle = await less.render(lessCode, { paths: [globalStylesDir] });
+          }
+        }
+      }
+
+      magicString.replace(/(styleUrl:)(.*)(.component.less")/, `styles: \`${cssStyle}\``);
 
       return {
         code: magicString.toString(),
