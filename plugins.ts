@@ -136,12 +136,13 @@ export function BuildAngularPlugin(): Plugin {
 
       const magicString = new MagicString(sourceFile.text);
 
-      // If the Babel Linker is too slow for you, you can uncomment
+      // If you want to try the Babel Linker in development, comment out the
       // the three lines below and the line setting the AngularLinkerPlugin
       // to run in build only.
-      // if (id.includes("main.ts") && isDev) {
-      //   magicString.prepend("import '@angular/compiler';");
-      // }
+      // Note: it's REALLY slow.
+      if (id.includes("main.ts") && isDev) {
+        magicString.prepend("import '@angular/compiler';");
+      }
 
       builder.emit(
         sourceFile,
@@ -173,9 +174,10 @@ export function AngularLinkerPlugin(): Plugin {
   return {
     name: "vite-add-angular-linker",
     enforce: "pre",
-    // If the Babel Linker is too slow for you, you can uncomment
+    // If you want to try the Babel Linker in development, comment out the
     // the three lines in the plugin above and the line below.
-    // apply: "build",
+    // Note: it's REALLY slow.
+    apply: "build",
 
     /**
      * Vite's config hook. Used to perform a check for whether
