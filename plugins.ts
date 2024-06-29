@@ -107,7 +107,7 @@ export function BuildAngularPlugin(): Plugin {
 
       const validateResult = await validateFiles();
 
-      if (validateResult) {
+      if (validateResult && !isDev) {
         process.exit(1);
       }
     },
