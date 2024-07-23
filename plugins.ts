@@ -161,14 +161,10 @@ export function BuildAngularPlugin(): Plugin {
       transformers.transformers,
     );
 
-    magicString.overwrite(0, magicString.length(), `${output}${hmrFooter}`);
-
-    if (fileId.match(/\/[a-zA-Z]+\.component.ts/)) {
-      // TODO: Figure out why this seems to run twice (making this check
-      // required).
-      if (magicString.toString().indexOf("if (import.meta.hot) ")) return magicString;
-
-      return magicString.append(hmrFooter);
+    if (fileId.endsWith("component.ts") && isDev) {
+      magicString.overwrite(0, magicString.length(), `${output}${hmrFooter}`);
+    } else {
+      magicString.overwrite(0, magicString.length(), output);
     }
 
     return magicString;
@@ -202,7 +198,7 @@ export function BuildAngularPlugin(): Plugin {
       // Override the host's readFile function to add an HMR handler
       // to the main.ts file.
       tsHost.readFile = (name) => {
-        let res = originalReadFile.call(tsHost, name);
+        let res: string | undefined = originalReadFile.call(tsHost, name);
 
         if (name.includes("main.ts") && res && isDev) {
           // The global app variable allows us to update the DOM
@@ -210,13 +206,11 @@ export function BuildAngularPlugin(): Plugin {
           // TODO: This map of component name to selector should be dynamic
           res = res.replace(/bootstrapApplication\([a-zA-Z]+, [a-zA-Z]+?\)/, (value) => {
             return `${value}.then((app) => {
-              if (import.meta.hot && app) {
-                globalThis.__app = app;
-                globalThis.componentSelectorMapping = new Map()
-                  .set("AppComponent", "app-root")
-                  .set("ErrorPage", "app-error-page")
-                  .set("Sample", "app-sample");
-              }
+              globalThis.__app = app;
+              globalThis.componentSelectorMapping = new Map()
+                .set("AppComponent", "app-root")
+                .set("ErrorPage", "app-error-page")
+                .set("Sample", "app-sample");
             })`;
           });
         }
