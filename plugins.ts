@@ -203,6 +203,7 @@ export function BuildAngularPlugin(): Plugin {
         if (name.includes("main.ts") && res && isDev) {
           // The global app variable allows us to update the DOM
           // and the angular app whenever a file changes
+          // Inspired by https://github.com/ElMassimo/vite-plugin-stimulus-hmr/blob/main/src/index.ts
           // TODO: This map of component name to selector should be dynamic
           res = res.replace(/bootstrapApplication\([a-zA-Z]+, [a-zA-Z]+?\)/, (value) => {
             return `${value}.then((app) => {
