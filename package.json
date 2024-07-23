@@ -28,21 +28,21 @@
     "prettier": "^3.2.5",
     "rollup-plugin-tsconfig-paths": "^1.5.2",
     "tslib": "^2.6.2",
-    "typescript": "^5.4.5",
+    "typescript": "^5.5.4",
     "vite": "^5.3.3",
     "web-test-runner-jasmine": "^0.0.6"
   },
   "dependencies": {
-    "@angular/animations": "^18.0.6",
-    "@angular/common": "^18.0.6",
-    "@angular/compiler": "^18.0.6",
-    "@angular/compiler-cli": "^18.0.6",
-    "@angular/core": "^18.0.6",
-    "@angular/forms": "^18.0.6",
-    "@angular/platform-browser": "^18.0.6",
-    "@angular/platform-browser-dynamic": "^18.0.6",
-    "@angular/router": "^18.0.6",
+    "@angular/animations": "^18.1.1",
+    "@angular/common": "^18.1.1",
+    "@angular/compiler": "^18.1.1",
+    "@angular/compiler-cli": "^18.1.1",
+    "@angular/core": "^18.1.1",
+    "@angular/forms": "^18.1.1",
+    "@angular/platform-browser": "^18.1.1",
+    "@angular/platform-browser-dynamic": "^18.1.1",
+    "@angular/router": "^18.1.1",
     "rxjs": "^7.8.1",
-    "zone.js": "^0.14.7"
+    "zone.js": "^0.14.8"
   }
 }
