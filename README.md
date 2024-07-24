@@ -30,8 +30,6 @@ Built from the [angular-gulp](https://github.com/shirblc/angular-gulp) repo.
 4. Run `npm run dev` to compile for the files for local development.
 5. Open localhost:5173.
 
-**Note:** Currently you need to update this [mapping of components to selectors](https://github.com/shirblc/vite-angular/blob/main/plugins.ts#L212-L214) whenever you add a component in order to enable HMR.
-
 ## Contents
 
 ### Components

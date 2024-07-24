@@ -44,16 +44,21 @@ import less from "less";
 import fs from "node:fs";
 import * as tsconfig from "./tsconfig.json";
 
+const nameTemplate = "<compName>";
+const selectorTemplate = "<compSelector>";
 const hmrFooter = `\n\n
 import { APP_BOOTSTRAP_LISTENER, createComponent } from "@angular/core";
 
 if (import.meta.hot) {
+  if (!globalThis.__componentSelectorMapping) globalThis.__componentSelectorMapping = new Map();
+  globalThis.__componentSelectorMapping.set("${nameTemplate}", "${selectorTemplate}");
+
   import.meta.hot.accept((newModule) => {
     if (!(newModule && globalThis.__app)) return;
     const currentModuleName = Object.keys(newModule)[0];
     const updatedModule = newModule[currentModuleName];
     const currentModuleSelector =
-      globalThis.componentSelectorMapping.get(currentModuleName) ?? "app-root";
+      globalThis.__componentSelectorMapping.get(currentModuleName) ?? "app-root";
     const currentNodes = document.querySelectorAll(currentModuleSelector);
 
     currentNodes.forEach((node) => {
@@ -162,7 +167,22 @@ export function BuildAngularPlugin(): Plugin {
     );
 
     if (fileId.endsWith("component.ts") && isDev) {
-      magicString.overwrite(0, magicString.length(), `${output}${hmrFooter}`);
+      // Fetches the selector and the class name from the code to add to the mapping.
+      // This is used to replace components using HMR.
+      const componentSelectorMatch = sourceFile.text.match(/selector:( )?("|')(.*)("|'),/);
+      const componentNameMatch = sourceFile.text.match(
+        /export class [a-zA-Z]* (extends (.*) )?(implements (.*) )?{/,
+      );
+      const componentSelectorParts = componentSelectorMatch![0].includes('"')
+        ? componentSelectorMatch![0].split('"')
+        : componentSelectorMatch![0].split("'");
+      const classIndex = componentNameMatch![0].indexOf("class");
+      const componentNameParts = componentNameMatch![0].substring(classIndex + 6).split(" ");
+      const fullFooter = hmrFooter
+        .replace(nameTemplate, componentNameParts[0])
+        .replace(selectorTemplate, componentSelectorParts[1]);
+
+      magicString.overwrite(0, magicString.length(), `${output}${fullFooter}`);
     } else {
       magicString.overwrite(0, magicString.length(), output);
     }
@@ -204,14 +224,9 @@ export function BuildAngularPlugin(): Plugin {
           // The global app variable allows us to update the DOM
           // and the angular app whenever a file changes
           // Inspired by https://github.com/ElMassimo/vite-plugin-stimulus-hmr/blob/main/src/index.ts
-          // TODO: This map of component name to selector should be dynamic
           res = res.replace(/bootstrapApplication\([a-zA-Z]+, [a-zA-Z]+?\)/, (value) => {
             return `${value}.then((app) => {
               globalThis.__app = app;
-              globalThis.componentSelectorMapping = new Map()
-                .set("AppComponent", "app-root")
-                .set("ErrorPage", "app-error-page")
-                .set("Sample", "app-sample");
             })`;
           });
         }
