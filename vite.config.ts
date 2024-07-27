@@ -16,11 +16,14 @@ export default defineConfig({
     },
   },
   build: {
-    sourcemap: true,
+    sourcemap: false,
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes("node_modules")) {
+          console.log(id);
+          if (id.includes("polyfill.js") || id.includes("zone.js")) {
+            return "polyfills";
+          } else if (id.includes("node_modules")) {
             return "vendor";
           }
         },

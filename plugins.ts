@@ -91,6 +91,20 @@ export function BuildAngularPlugin(): Plugin {
     },
 
     /**
+     * Vite's transformIndexHtml hook. Adds the link to the polyfills file.
+     */
+    transformIndexHtml(html) {
+      if (isDev) {
+        return html.replace(
+          "<head>",
+          "<head>\n\t<script type='module' src='/src/polyfills.ts'></script>",
+        );
+      } else {
+        return html;
+      }
+    },
+
+    /**
      * Vite's handleHotUpdate hook. Performs custom handling for HMR
      * updates.
      */

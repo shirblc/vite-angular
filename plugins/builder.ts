@@ -91,7 +91,6 @@ export default class AngularBuilder {
    * @param tsConfigPath - the path to the tsconfig.json file.
    */
   constructor(isDev: boolean, tsConfigPath: string) {
-    console.log(tsConfigPath);
     const { options, rootNames: parsedFiles } = readConfiguration(tsConfigPath, {
       noEmit: false,
     });
@@ -191,8 +190,9 @@ export default class AngularBuilder {
     // the condition below and the line setting the AngularLinkerPlugin
     // to run in build only.
     // Note: it's REALLY slow.
-    if (fileId.includes("main.ts") && this.isDev) {
-      magicString.prepend("import '@angular/compiler';");
+    if (fileId.includes("main.ts")) {
+      if (this.isDev) magicString.prepend("import '@angular/compiler';");
+      else magicString.prepend("import('./polyfills.ts');\n");
     }
 
     // Credit to @nitedani for this
