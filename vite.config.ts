@@ -20,7 +20,6 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          console.log(id);
           if (id.includes("polyfill.js") || id.includes("zone.js")) {
             return "polyfills";
           } else if (id.includes("node_modules")) {
