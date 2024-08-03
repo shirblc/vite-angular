@@ -17,11 +17,11 @@ export default defineConfig({
   },
   server: {
     watch: {
-      ignored: ["**/coverage/**",]
-    }
+      ignored: ["**/coverage/**"],
+    },
   },
   optimizeDeps: {
-    exclude: ["/__web-dev-server__web-socket.js", "@web/test-runner-core"]
+    exclude: ["/__web-dev-server__web-socket.js", "@web/test-runner-core"],
   },
   build: {
     sourcemap: false,
