@@ -24,7 +24,7 @@
     "noPropertyAccessFromIndexSignature": true,
     "importHelpers": true,
     "paths": {
-      "@app/*": ["./src/app/*"],
+      "@app/*": ["./src/app/*"]
     },
     "removeComments": true
   },
