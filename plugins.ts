@@ -54,7 +54,7 @@ export function BuildAngularPlugin(): Plugin {
      */
     config(_config, env) {
       isDev = env.command == "serve";
-      ngBuilder = new AngularBuilder(isDev, path.resolve("./tsconfig.json"));
+      ngBuilder = new AngularBuilder(isDev, path.resolve("./tsconfig.dev.json"));
     },
 
     /**
@@ -62,7 +62,7 @@ export function BuildAngularPlugin(): Plugin {
      * host and builder, as well as the Angular compiler.
      */
     async buildStart(_options) {
-      ngBuilder.setupCompilerHost();
+      await ngBuilder.setupCompilerHost();
       ngBuilder.setupAngularProgram();
 
       // Credit to @nitedani for the next two lines

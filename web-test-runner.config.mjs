@@ -27,13 +27,14 @@
   SOFTWARE.
 */
 
+import fs from "node:fs";
+import { fileURLToPath } from "node:url";
+import { defaultReporter } from "@web/test-runner";
 import { playwrightLauncher } from "@web/test-runner-playwright";
 import { esbuildPlugin } from "@web/dev-server-esbuild";
-import { TranspileDecoratorsVite, ReplaceTemplateUrlPlugin } from "./plugins.mjs";
 import { fromRollup } from "@web/dev-server-rollup";
-import { jasmineTestRunnerConfig } from "web-test-runner-jasmine";
-import { fileURLToPath } from "url";
 import tsConfigPaths from "rollup-plugin-tsconfig-paths";
+import { TranspileDecoratorsVite, ReplaceTemplateUrlPlugin } from "./plugins.mjs";
 
 // TODO: Figure out how to replace these plugins with the angular compiler
 const templatePlugin = fromRollup(ReplaceTemplateUrlPlugin);
@@ -42,8 +43,9 @@ const configPaths = fromRollup(tsConfigPaths);
 
 /** @type {import("@web/test-runner").TestRunnerConfig} */
 export default {
+  reporters: [defaultReporter({ reportTestResults: true, reportTestProgress: true })],
   coverage: true,
-  files: ["src/**/*.spec.ts"],
+  files: ["src/**/*.spec.ts", "!plugins/tests.ts"],
   browsers: [
     playwrightLauncher({ product: "chromium" }),
     // playwrightLauncher({ product: 'webkit' }),
@@ -52,12 +54,27 @@ export default {
   nodeResolve: true,
   CoverageConfig: {
     include: ["src/**/*.ts"],
-    exclude: ["src/**/*.spec.ts", "src/main.ts", "src/app/app.config.ts", "src/app/app.routes.ts"],
+    exclude: [
+      "node_modules/**",
+      "src/**/*.spec.ts",
+      "src/main.ts",
+      "src/app/app.config.ts",
+      "src/app/app.routes.ts",
+      "src/polyfills.ts",
+      "src/assets/*",
+      "plugins/tests.ts",
+      "tests/*",
+    ],
     report: true,
     reportDir: "./coverage",
     reporters: ["html", "lcovonly", "text-summary"],
   },
-  ...jasmineTestRunnerConfig(),
+  // Credit to @blueprintui for most of the HTML.
+  // https://github.com/blueprintui/web-test-runner-jasmine/blob/main/src/index.ts
+  testRunnerHtml: (_path, _config) => fs.readFileSync("./plugins/tests.html", { encoding: "utf8" }),
+  testsStartTimeout: 5000,
+  testsFinishTimeout: 5000,
+  debug: false,
   testFramework: {
     config: {
       defaultTimeoutInterval: 5000,

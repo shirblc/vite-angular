@@ -15,6 +15,14 @@ export default defineConfig({
       },
     },
   },
+  server: {
+    watch: {
+      ignored: ["**/coverage/**",]
+    }
+  },
+  optimizeDeps: {
+    exclude: ["/__web-dev-server__web-socket.js", "@web/test-runner-core"]
+  },
   build: {
     sourcemap: false,
     rollupOptions: {

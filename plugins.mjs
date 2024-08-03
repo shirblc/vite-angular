@@ -31,6 +31,7 @@ import MagicString from "magic-string";
 import fs, { readFileSync } from "fs";
 import typescript from "typescript";
 import less from "less";
+import { loadEnv } from "vite";
 const { transpileModule } = typescript;
 
 /**
@@ -129,7 +130,10 @@ export function TranspileDecoratorsVite() {
           compilerOptions,
         });
 
+        const env = loadEnv("development", ".");
+
         magicString.overwrite(0, code.length, transpiled.outputText);
+        magicString.prepend(`import.meta.env = ${JSON.stringify(env)};\n`);
 
         return {
           code: magicString.toString(),
