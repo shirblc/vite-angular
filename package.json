@@ -13,7 +13,7 @@
     "test-open": "web-test-runner --open --manual"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.9",
+    "@babel/core": "^7.25.2",
     "@types/babel__core": "^7.20.5",
     "@types/jasmine": "^5.1.4",
     "@types/less": "^3.0.6",
