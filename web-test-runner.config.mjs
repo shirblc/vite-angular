@@ -94,7 +94,12 @@ export default {
         "tests/*",
       ],
       babelHelpers: "bundled",
-      plugins: ["babel-plugin-istanbul"],
+      presets: ["@babel/preset-typescript"],
+      plugins: [
+        "babel-plugin-istanbul",
+        ["@babel/plugin-syntax-decorators", { decoratorsBeforeExport: true }],
+      ],
+      extensions: [".ts"],
     }),
     compileAngular(),
     configPaths({}),
