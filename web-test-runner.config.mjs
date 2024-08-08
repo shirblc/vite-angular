@@ -29,12 +29,12 @@ import { playwrightLauncher } from "@web/test-runner-playwright";
 import { esbuildPlugin } from "@web/dev-server-esbuild";
 import { fromRollup } from "@web/dev-server-rollup";
 import tsConfigPaths from "rollup-plugin-tsconfig-paths";
-import { TranspileDecoratorsVite, ReplaceTemplateUrlPlugin } from "./plugins.mjs";
+import { AngularTestsPlugin } from "./plugins/wtr.js";
+import rollupBabel from "@rollup/plugin-babel";
 
-// TODO: Figure out how to replace these plugins with the angular compiler
-const templatePlugin = fromRollup(ReplaceTemplateUrlPlugin);
-const decoratorTranspiler = fromRollup(TranspileDecoratorsVite);
 const configPaths = fromRollup(tsConfigPaths);
+const compileAngular = fromRollup(AngularTestsPlugin);
+const babel = fromRollup(rollupBabel);
 
 /** @type {import("@web/test-runner").TestRunnerConfig} */
 export default {
@@ -63,6 +63,7 @@ export default {
     report: true,
     reportDir: "./coverage",
     reporters: ["html", "lcovonly", "text-summary"],
+    nativeInstrumentation: false,
   },
   // Credit to @blueprintui for most of the HTML.
   // https://github.com/blueprintui/web-test-runner-jasmine/blob/main/src/index.ts
@@ -77,9 +78,31 @@ export default {
     },
   },
   plugins: [
+    // From
+    // https://modern-web.dev/docs/test-runner/writing-tests/code-coverage/#coverage-browser-support
+    babel({
+      include: ["src/**/*.ts"],
+      exclude: [
+        "node_modules/**",
+        "src/**/*.spec.ts",
+        "src/main.ts",
+        "src/app/app.config.ts",
+        "src/app/app.routes.ts",
+        "src/polyfills.ts",
+        "src/assets/*",
+        "plugins/tests.ts",
+        "tests/*",
+      ],
+      babelHelpers: "bundled",
+      presets: ["@babel/preset-typescript"],
+      plugins: [
+        "babel-plugin-istanbul",
+        ["@babel/plugin-syntax-decorators", { decoratorsBeforeExport: true }],
+      ],
+      extensions: [".ts"],
+    }),
+    compileAngular(),
     configPaths({}),
-    templatePlugin(),
-    decoratorTranspiler(),
     esbuildPlugin({
       target: "es2020",
       ts: true,
