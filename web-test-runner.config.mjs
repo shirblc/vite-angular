@@ -29,12 +29,10 @@ import { playwrightLauncher } from "@web/test-runner-playwright";
 import { esbuildPlugin } from "@web/dev-server-esbuild";
 import { fromRollup } from "@web/dev-server-rollup";
 import tsConfigPaths from "rollup-plugin-tsconfig-paths";
-import { TranspileDecoratorsVite, ReplaceTemplateUrlPlugin } from "./plugins.mjs";
+import { AngularTestsPlugin } from "./plugins/wtr.js";
 
-// TODO: Figure out how to replace these plugins with the angular compiler
-const templatePlugin = fromRollup(ReplaceTemplateUrlPlugin);
-const decoratorTranspiler = fromRollup(TranspileDecoratorsVite);
 const configPaths = fromRollup(tsConfigPaths);
+const compileAngular = fromRollup(AngularTestsPlugin);
 
 /** @type {import("@web/test-runner").TestRunnerConfig} */
 export default {
@@ -77,9 +75,8 @@ export default {
     },
   },
   plugins: [
+    compileAngular(),
     configPaths({}),
-    templatePlugin(),
-    decoratorTranspiler(),
     esbuildPlugin({
       target: "es2020",
       ts: true,
