@@ -21,6 +21,7 @@ jobs:
           key: my-project-{{ .Branch }}-{{ checksum "package-lock.json" }}
           paths:
             - "node_modules"
+      - run: npx playwright install-deps
       - run: npx playwright install
       - run: npm test
       - codecov/upload
