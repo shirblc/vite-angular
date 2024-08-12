@@ -31,6 +31,7 @@ import { fromRollup } from "@web/dev-server-rollup";
 import tsConfigPaths from "rollup-plugin-tsconfig-paths";
 import { AngularTestsPlugin } from "./plugins/wtr.js";
 import rollupBabel from "@rollup/plugin-babel";
+import { chromeLauncher } from "@web/test-runner-chrome";
 
 const configPaths = fromRollup(tsConfigPaths);
 const compileAngular = fromRollup(AngularTestsPlugin);
@@ -42,9 +43,12 @@ export default {
   coverage: true,
   files: ["src/**/*.spec.ts", "!plugins/tests.ts"],
   browsers: [
-    playwrightLauncher({ product: "chromium" }),
+    // playwrightLauncher({ product: "chromium" }),
     // playwrightLauncher({ product: 'webkit' }),
     // playwrightLauncher({ product: 'firefox' }),
+    chromeLauncher({ launchOptions: {
+      headless: true,
+    }})
   ],
   nodeResolve: true,
   CoverageConfig: {
