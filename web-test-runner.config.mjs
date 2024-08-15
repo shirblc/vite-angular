@@ -31,6 +31,7 @@ import { fromRollup } from "@web/dev-server-rollup";
 import tsConfigPaths from "rollup-plugin-tsconfig-paths";
 import { AngularTestsPlugin } from "./plugins/wtr.js";
 import rollupBabel from "@rollup/plugin-babel";
+import { chromeLauncher } from "@web/test-runner-chrome";
 
 const configPaths = fromRollup(tsConfigPaths);
 const compileAngular = fromRollup(AngularTestsPlugin);
@@ -42,12 +43,16 @@ export default {
   coverage: true,
   files: ["src/**/*.spec.ts", "!plugins/tests.ts"],
   browsers: [
-    playwrightLauncher({ product: "chromium" }),
+    // playwrightLauncher({ product: "chromium" }),
     // playwrightLauncher({ product: 'webkit' }),
     // playwrightLauncher({ product: 'firefox' }),
+    chromeLauncher({ launchOptions: {
+      headless: true,
+      devtools: false,
+    }})
   ],
   nodeResolve: true,
-  CoverageConfig: {
+  coverageConfig: {
     include: ["src/**/*.ts"],
     exclude: [
       "node_modules/**",
@@ -78,30 +83,17 @@ export default {
     },
   },
   plugins: [
+    compileAngular(),
     // From
     // https://modern-web.dev/docs/test-runner/writing-tests/code-coverage/#coverage-browser-support
     babel({
-      include: ["src/**/*.ts"],
-      exclude: [
-        "node_modules/**",
-        "src/**/*.spec.ts",
-        "src/main.ts",
-        "src/app/app.config.ts",
-        "src/app/app.routes.ts",
-        "src/polyfills.ts",
-        "src/assets/*",
-        "plugins/tests.ts",
-        "tests/*",
-      ],
-      babelHelpers: "bundled",
-      presets: ["@babel/preset-typescript"],
-      plugins: [
-        "babel-plugin-istanbul",
-        ["@babel/plugin-syntax-decorators", { decoratorsBeforeExport: true }],
-      ],
-      extensions: [".ts"],
+      // avoid running babel on code that doesn't need it
+      include: ['src/**/*.ts'],
+      exclude: ["node_modules/**", "src/**/*.spec.ts"],
+      babelHelpers: 'bundled',
+      plugins: ['istanbul'],
+      extensions: [".ts"]
     }),
-    compileAngular(),
     configPaths({}),
     esbuildPlugin({
       target: "es2020",

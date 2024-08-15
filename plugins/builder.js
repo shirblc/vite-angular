@@ -106,9 +106,6 @@ export default class AngularBuilder {
 
     const magicString = new MagicString(sourceFile.text);
 
-    magicString.prepend("import '@angular/compiler';");
-    magicString.prepend("import 'zone.js';");
-
     // Credit to @nitedani for this
     // https://github.com/nitedani/vite-plugin-angular
     this.builder.emit(
