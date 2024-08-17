@@ -29,14 +29,11 @@ import { playwrightLauncher } from "@web/test-runner-playwright";
 import { esbuildPlugin } from "@web/dev-server-esbuild";
 import { fromRollup } from "@web/dev-server-rollup";
 import tsConfigPaths from "rollup-plugin-tsconfig-paths";
-import rollupBabel from "@rollup/plugin-babel";
-import { TranspileDecoratorsVite, ReplaceTemplateUrlPlugin } from "./plugins.mjs";
+import { AngularTestsPlugin } from "./plugins/wtr.js";
+import { chromeLauncher } from "@web/test-runner-chrome";
 
-// TODO: Figure out how to replace these plugins with the angular compiler
-const templatePlugin = fromRollup(ReplaceTemplateUrlPlugin);
-const decoratorTranspiler = fromRollup(TranspileDecoratorsVite);
 const configPaths = fromRollup(tsConfigPaths);
-const babel = fromRollup(rollupBabel);
+const compileAngular = fromRollup(AngularTestsPlugin);
 
 /** @type {import("@web/test-runner").TestRunnerConfig} */
 export default {
@@ -44,9 +41,16 @@ export default {
   coverage: true,
   files: ["src/**/*.spec.ts", "!plugins/tests.ts"],
   browsers: [
-    playwrightLauncher({ product: "chromium" }),
+    // Commented out until https://github.com/modernweb-dev/web/issues/2777 is resolved
+    // playwrightLauncher({ product: "chromium" }),
     // playwrightLauncher({ product: 'webkit' }),
     // playwrightLauncher({ product: 'firefox' }),
+    chromeLauncher({
+      launchOptions: {
+        headless: true,
+        devtools: false,
+      },
+    }),
   ],
   nodeResolve: true,
   coverageConfig: {
@@ -65,8 +69,7 @@ export default {
     report: true,
     reportDir: "./coverage",
     reporters: ["html", "lcovonly", "text-summary"],
-    // Commented out until https://github.com/modernweb-dev/web/issues/2777 is resolved
-    // nativeInstrumentation: false,
+    nativeInstrumentation: false,
   },
   // Credit to @blueprintui for most of the HTML.
   // https://github.com/blueprintui/web-test-runner-jasmine/blob/main/src/index.ts
@@ -82,22 +85,7 @@ export default {
   },
   plugins: [
     configPaths({}),
-    // From
-    // https://modern-web.dev/docs/test-runner/writing-tests/code-coverage/#coverage-browser-support
-    babel({
-      // avoid running babel on code that doesn't need it
-      include: ["src/**/*.ts"],
-      exclude: ["node_modules/**", "src/**/*.spec.ts"],
-      babelHelpers: "bundled",
-      plugins: [
-        ["istanbul"],
-        ["@babel/plugin-syntax-decorators", { decoratorsBeforeExport: true }],
-        ["@babel/plugin-syntax-typescript"],
-      ],
-      extensions: [".ts"],
-    }),
-    templatePlugin(),
-    decoratorTranspiler(),
+    compileAngular(),
     esbuildPlugin({
       target: "es2020",
       ts: true,

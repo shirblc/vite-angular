@@ -16,7 +16,6 @@
     "@babel/core": "^7.25.2",
     "@babel/plugin-syntax-decorators": "^7.24.7",
     "@babel/plugin-syntax-typescript": "^7.24.7",
-    "@rollup/plugin-babel": "^6.0.4",
     "@types/babel__core": "^7.20.5",
     "@types/jasmine": "^5.1.4",
     "@types/less": "^3.0.6",
@@ -46,6 +45,7 @@
     "@angular/platform-browser": "^18.1.4",
     "@angular/platform-browser-dynamic": "^18.1.4",
     "@angular/router": "^18.1.4",
+    "@web/test-runner-chrome": "^0.16.0",
     "rxjs": "^7.8.1",
     "zone.js": "^0.14.10"
   }
