@@ -30,12 +30,10 @@ import { esbuildPlugin } from "@web/dev-server-esbuild";
 import { fromRollup } from "@web/dev-server-rollup";
 import tsConfigPaths from "rollup-plugin-tsconfig-paths";
 import { AngularTestsPlugin } from "./plugins/wtr.js";
-import rollupBabel from "@rollup/plugin-babel";
 import { chromeLauncher } from "@web/test-runner-chrome";
 
 const configPaths = fromRollup(tsConfigPaths);
 const compileAngular = fromRollup(AngularTestsPlugin);
-const babel = fromRollup(rollupBabel);
 
 /** @type {import("@web/test-runner").TestRunnerConfig} */
 export default {
@@ -46,10 +44,12 @@ export default {
     // playwrightLauncher({ product: "chromium" }),
     // playwrightLauncher({ product: 'webkit' }),
     // playwrightLauncher({ product: 'firefox' }),
-    chromeLauncher({ launchOptions: {
-      headless: true,
-      devtools: false,
-    }})
+    chromeLauncher({
+      launchOptions: {
+        headless: true,
+        devtools: true,
+      },
+    }),
   ],
   nodeResolve: true,
   coverageConfig: {
@@ -83,18 +83,8 @@ export default {
     },
   },
   plugins: [
-    compileAngular(),
-    // From
-    // https://modern-web.dev/docs/test-runner/writing-tests/code-coverage/#coverage-browser-support
-    babel({
-      // avoid running babel on code that doesn't need it
-      include: ['src/**/*.ts'],
-      exclude: ["node_modules/**", "src/**/*.spec.ts"],
-      babelHelpers: 'bundled',
-      plugins: ['istanbul'],
-      extensions: [".ts"]
-    }),
     configPaths({}),
+    compileAngular(),
     esbuildPlugin({
       target: "es2020",
       ts: true,

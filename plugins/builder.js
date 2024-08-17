@@ -31,9 +31,10 @@ import MagicString from "magic-string";
 import { createCompilerHost, createProgram, readConfiguration } from "@angular/compiler-cli";
 import ts from "typescript";
 import { readFileSync } from "node:fs";
+import { transformSync } from "@babel/core";
+import { createFilter } from "vite";
 
 export default class AngularBuilder {
-  isDev = false;
   compilerHost;
   compilerOptions;
   currentAngularProgram = undefined;
@@ -41,20 +42,21 @@ export default class AngularBuilder {
   builder;
   rootFiles;
   tsConfigPath;
+  filter;
 
   /**
    * Creates a new AngularBuilder.
-   * @param isDev - Whether we're in development.
-   * @param tsConfigPath - the path to the tsconfig.json file.
+   * @param { string } tsConfigPath - the path to the tsconfig.json file.
+   * @param { {include: string[], exclude: string[]} } coverageConf - coverage config.
    */
-  constructor(isDev, tsConfigPath) {
+  constructor(tsConfigPath, coverageConf) {
     const { options, rootNames: parsedFiles } = readConfiguration(tsConfigPath, {
       noEmit: false,
     });
     this.compilerOptions = options;
     this.rootFiles = parsedFiles;
-    this.isDev = isDev;
     this.tsConfigPath = tsConfigPath;
+    this.filter = createFilter(coverageConf.include, coverageConf.exclude);
   }
 
   /**
@@ -64,6 +66,27 @@ export default class AngularBuilder {
     const tsConfig = readFileSync(this.tsConfigPath, { encoding: "utf-8" });
     const tsConfigJson = JSON.parse(tsConfig);
     this.tsHost = ts.createCompilerHost(tsConfigJson["compilerOptions"]);
+    const originalReadFile = this.tsHost.readFile;
+    // Override the host's readFile function to add an coverage if necessary.
+    this.tsHost.readFile = (name) => {
+      const res = originalReadFile.call(this.tsHost, name);
+      if (!res) return;
+
+      // Filter out files that don't need to be instrumented
+      if (!this.filter(name)) return res;
+
+      const instrumentedRes = transformSync(res, {
+        filename: name,
+        plugins: [
+          ["istanbul"],
+          ["@babel/plugin-syntax-decorators", { decoratorsBeforeExport: true }],
+          ["@babel/plugin-syntax-typescript"],
+        ],
+        sourceMaps: "inline",
+      })?.code;
+
+      return instrumentedRes;
+    };
     this.compilerHost = createCompilerHost({
       options: { ...this.compilerOptions },
       tsHost: this.tsHost,
@@ -89,7 +112,7 @@ export default class AngularBuilder {
 
   /**
    * Compiles the given file using the Angular compiler.
-   * @param fileId the ID of the file to compile.
+   * @param { string } fileId the ID of the file to compile.
    * @returns a MagicString with the transform result and a source map.
    */
   buildFile(fileId) {
@@ -100,7 +123,7 @@ export default class AngularBuilder {
 
     if (!/\.[cm]?tsx?$/.test(fileId)) return;
 
-    let sourceFile = this.builder.getSourceFile(fileId);
+    const sourceFile = this.builder.getSourceFile(fileId);
 
     if (!sourceFile) return;
 
