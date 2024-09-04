@@ -33,7 +33,7 @@
     "rollup-plugin-tsconfig-paths": "^1.5.2",
     "tslib": "^2.7.0",
     "typescript": "^5.5.4",
-    "vite": "^5.4.2"
+    "vite": "^5.4.3"
   },
   "dependencies": {
     "@angular/animations": "^18.2.2",
