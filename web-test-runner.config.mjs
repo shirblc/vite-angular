@@ -30,6 +30,7 @@ import { esbuildPlugin } from "@web/dev-server-esbuild";
 import { fromRollup } from "@web/dev-server-rollup";
 import tsConfigPaths from "rollup-plugin-tsconfig-paths";
 import { AngularTestsPlugin } from "./plugins/wtr.js";
+import { chromeLauncher } from "@web/test-runner-chrome";
 
 const configPaths = fromRollup(tsConfigPaths);
 const compileAngular = fromRollup(AngularTestsPlugin);
@@ -41,18 +42,24 @@ export default {
   files: ["src/**/*.spec.ts", "!plugins/tests.ts"],
   browsers: [
     // Commented out until https://github.com/modernweb-dev/web/issues/2777 is resolved
-    playwrightLauncher({
-      product: "chromium",
-      args: [
-        "--disable-gpu",
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-extensions",
-        "--disable-dev-shm-usage",
-      ],
-    }),
+    // playwrightLauncher({
+    //   product: "chromium",
+    //   args: [
+    //     "--disable-gpu",
+    //     "--no-sandbox",
+    //     "--disable-setuid-sandbox",
+    //     "--disable-extensions",
+    //     "--disable-dev-shm-usage",
+    //   ],
+    // }),
     // playwrightLauncher({ product: 'webkit' }),
     // playwrightLauncher({ product: 'firefox' }),
+    chromeLauncher({
+      launchOptions: {
+        headless: true,
+        devtools: false,
+      },
+    }),
   ],
   nodeResolve: true,
   coverageConfig: {
@@ -71,8 +78,7 @@ export default {
     report: true,
     reportDir: "./coverage",
     reporters: ["html", "lcovonly", "text-summary"],
-    // Commented out until https://github.com/modernweb-dev/web/issues/2777 is resolved
-    // nativeInstrumentation: false,
+    nativeInstrumentation: false,
   },
   // Credit to @blueprintui for most of the HTML.
   // https://github.com/blueprintui/web-test-runner-jasmine/blob/main/src/index.ts
