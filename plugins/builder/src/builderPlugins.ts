@@ -73,9 +73,9 @@ if (import.meta.hot) {
 `;
 
 /**
-   * Plugin for adding the HMR footer to the end of the file (if the file is
-   * a component file).
-   */
+ * Plugin for adding the HMR footer to the end of the file (if the file is
+ * a component file).
+ */
 export function hmrPostPlugin(): BuilderPlugin {
   return {
     name: "hmr-plugin",
