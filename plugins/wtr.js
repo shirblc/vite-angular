@@ -38,7 +38,7 @@ export const AngularTestsPlugin = () => {
           include: ["src/**/*.ts"],
           exclude: ["node_modules/**", "src/**/*.spec.ts"],
         }),
-        addCompiler(),
+        addCompilerPlugin(),
       ]);
       await ngBuilder.setupCompilerHost();
       ngBuilder.setupAngularProgram();
