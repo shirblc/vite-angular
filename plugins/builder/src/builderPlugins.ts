@@ -136,7 +136,7 @@ export function instrumentFilesPlugin(config: CoverageConfig): BuilderPlugin {
     setup(_env) {
       filter = createFilter(config.include, config.exclude);
     },
-    transform(fileId, code) {
+    read(fileId, code) {
       // Filter out files that don't need to be instrumented
       if (!filter(fileId) || !code) return code;
 

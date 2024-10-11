@@ -43,7 +43,7 @@ export interface BuilderPlugin {
   apply: Environment;
   setup?: (env: Environment) => undefined;
   read?: (fileId: string, code: string | undefined) => string | undefined;
-  transform: (fileId: string, code: string | undefined) => string | undefined;
+  transform?: (fileId: string, code: string | undefined) => string | undefined;
 }
 
 export default class AngularBuilder {
@@ -214,8 +214,10 @@ export default class AngularBuilder {
     );
 
     this.pluginMapping[this.env].forEach((plugin) => {
-      const result = plugin.transform(fileId, output);
-      if (result) output = result;
+      if (plugin.transform) {
+        const result = plugin.transform(fileId, output);
+        if (result) output = result;
+      }
     });
 
     magicString.overwrite(0, magicString.length(), output);
