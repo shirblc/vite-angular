@@ -22,7 +22,7 @@
     "noPropertyAccessFromIndexSignature": true,
     "importHelpers": true,
     "removeComments": false,
-    "outDir": "js"
+    "outDir": "dist"
   },
   "include": ["src/*.ts"]
 }

@@ -9,8 +9,9 @@
     "preview": "vite preview",
     "format": "prettier .  --write",
     "cypress": "cypress run",
-    "test": "web-test-runner",
-    "test-open": "web-test-runner --open --manual"
+    "test": "npm run build:builder && web-test-runner",
+    "test-open": "npm run build:builder && web-test-runner --open --manual",
+    "build:builder": "cd plugins/builder && tsc && cd ../.."
   },
   "devDependencies": {
     "@babel/core": "^7.25.7",

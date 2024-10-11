@@ -24,8 +24,8 @@
 
 import { loadEnv } from "vite";
 import { resolve } from "node:path";
-import AngularBuilder from "./builder/js/builder.base.js";
-import { instrumentFiles, addCompiler } from "./builder/js/builderPlugins.js";
+import AngularBuilder from "./builder/dist/builder.base.js";
+import { instrumentFiles, addCompiler } from "./builder/dist/builderPlugins.js";
 
 export const AngularTestsPlugin = () => {
   let ngBuilder;
