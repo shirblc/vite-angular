@@ -42,12 +42,8 @@ export interface BuilderPlugin {
   stage: ApplyAt;
   apply: Environment;
   setup?: (env: Environment) => undefined;
+  read?: (fileId: string, code: string | undefined) => string | undefined;
   transform: (fileId: string, code: string | undefined) => string | undefined;
-}
-
-interface PluginStageMapping {
-  read: BuilderPlugin[];
-  "post-transform": BuilderPlugin[];
 }
 
 export default class AngularBuilder {
@@ -61,9 +57,9 @@ export default class AngularBuilder {
   rootFiles: string[];
   tsConfigPath: string;
   pluginMapping: {
-    dev: PluginStageMapping;
-    production: PluginStageMapping;
-    test: PluginStageMapping;
+    dev: BuilderPlugin[];
+    production: BuilderPlugin[];
+    test: BuilderPlugin[];
   };
 
   /**
@@ -88,15 +84,15 @@ export default class AngularBuilder {
     this.testEnv = testEnv;
     this.tsConfigPath = tsConfigPath;
     this.pluginMapping = {
-      dev: { read: [], "post-transform": [] },
-      production: { read: [], "post-transform": [] },
-      test: { read: [], "post-transform": [] },
+      dev: [],
+      production: [],
+      test: [],
     };
 
     plugins.forEach((plugin) => {
       if (plugin.apply == this.env || (this.env == "test" && plugin.apply == this.testEnv)) {
-        this.pluginMapping[plugin.apply][plugin.stage].push(plugin);
-        if (plugin.apply == this.testEnv) this.pluginMapping["test"][plugin.stage].push(plugin);
+        this.pluginMapping[plugin.apply].push(plugin);
+        if (plugin.apply == this.testEnv) this.pluginMapping["test"].push(plugin);
         if (plugin.setup) plugin.setup(env);
       }
     });
@@ -117,10 +113,11 @@ export default class AngularBuilder {
     this.tsHost.readFile = (name) => {
       let res: string | undefined = originalReadFile.call(this.tsHost, name);
 
-      this.pluginMapping[this.env].read.forEach((plugin) => {
-        const output = plugin.transform(name, res);
-        if (output) res = output;
-        else console.warn(`Plugin ${plugin.name} returned no output and was ignored.`);
+      this.pluginMapping[this.env].forEach((plugin) => {
+        let pluginOutput;
+
+        if (plugin.read) pluginOutput = plugin.read(name, res);
+        if (pluginOutput) res = pluginOutput;
       });
 
       return res;
@@ -216,10 +213,9 @@ export default class AngularBuilder {
       transformers.transformers,
     );
 
-    this.pluginMapping[this.env]["post-transform"].forEach((plugin) => {
+    this.pluginMapping[this.env].forEach((plugin) => {
       const result = plugin.transform(fileId, output);
       if (result) output = result;
-      else console.warn(`Plugin ${plugin.name} returned no output and was ignored.`);
     });
 
     magicString.overwrite(0, magicString.length(), output);

@@ -28,12 +28,7 @@ import defaultLinkerPlugin from "@angular/compiler-cli/linker/babel";
 import less from "less";
 import fs from "node:fs";
 import AngularBuilder from "./plugins/builder/src/builder.base";
-import {
-  hmrPostPlugin,
-  appBootstrapPlugin,
-  addCompiler,
-  addPolyfills,
-} from "./plugins/builder/src/builderPlugins";
+import { hmrPlugin, addCompiler, addPolyfills } from "./plugins/builder/src/builderPlugins";
 import path from "node:path";
 
 /**
@@ -59,7 +54,7 @@ export function BuildAngularPlugin(): Plugin {
         isDev ? "dev" : "production",
         "dev",
         path.resolve("./tsconfig.dev.json"),
-        [hmrPostPlugin(), appBootstrapPlugin(), addCompiler(), addPolyfills()],
+        [hmrPlugin(), addCompiler(), addPolyfills()],
       );
     },
 

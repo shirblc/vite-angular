@@ -74,13 +74,32 @@ if (import.meta.hot) {
 
 /**
  * Plugin for adding the HMR footer to the end of the file (if the file is
- * a component file).
+ * a component file) and adding an HMR handler to the main.ts file.
  */
-export function hmrPostPlugin(): BuilderPlugin {
+export function hmrPlugin(): BuilderPlugin {
   return {
     name: "hmr-plugin",
     stage: "post-transform",
     apply: "dev",
+
+    /**
+     * Read hook. Adds an HMR handler to the main.ts file.
+     */
+    read(fileId, code) {
+      if (!fileId.includes("main.ts") || !code) return code;
+
+      // The global app variable allows us to update the DOM
+      // and the angular app whenever a file changes
+      return code.replace(/bootstrapApplication\([a-zA-Z]+, [a-zA-Z]+?\)/, (value) => {
+        return `${value}.then((app) => {
+          globalThis.__app = app;
+        })`;
+      });
+    },
+
+    /**
+     * Transform hook.
+     */
     transform(fileId: string, code: string | undefined) {
       if (!code || !fileId.endsWith("component.ts")) return code;
 
@@ -100,28 +119,6 @@ export function hmrPostPlugin(): BuilderPlugin {
         .replace(selectorTemplate, componentSelectorParts[1]);
 
       return `${code}${fullFooter}`;
-    },
-  };
-}
-
-/**
- * Plugin for adding an HMR handler to the main.ts file.
- */
-export function appBootstrapPlugin(): BuilderPlugin {
-  return {
-    name: "global-app-plugin",
-    stage: "read",
-    apply: "dev",
-    transform(fileId, code) {
-      if (!fileId.includes("main.ts") || !code) return code;
-
-      // The global app variable allows us to update the DOM
-      // and the angular app whenever a file changes
-      return code.replace(/bootstrapApplication\([a-zA-Z]+, [a-zA-Z]+?\)/, (value) => {
-        return `${value}.then((app) => {
-          globalThis.__app = app;
-        })`;
-      });
     },
   };
 }
