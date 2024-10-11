@@ -25,7 +25,7 @@
 import { loadEnv } from "vite";
 import { resolve } from "node:path";
 import AngularBuilder from "./builder/dist/builder.base.js";
-import { instrumentFiles, addCompiler } from "./builder/dist/builderPlugins.js";
+import { instrumentFilesPlugin, addCompilerPlugin } from "./builder/dist/builderPlugins.js";
 
 export const AngularTestsPlugin = () => {
   let ngBuilder;
@@ -34,7 +34,7 @@ export const AngularTestsPlugin = () => {
     name: "angular-tests-plugin",
     async buildStart(options) {
       ngBuilder = new AngularBuilder("test", "dev", resolve("./tsconfig.json"), [
-        instrumentFiles({
+        instrumentFilesPlugin({
           include: ["src/**/*.ts"],
           exclude: ["node_modules/**", "src/**/*.spec.ts"],
         }),

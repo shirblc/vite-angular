@@ -126,7 +126,7 @@ export function hmrPlugin(): BuilderPlugin {
 /**
  * Plugin for adding instrumenting files in tests (for coverage).
  */
-export function instrumentFiles(config: CoverageConfig): BuilderPlugin {
+export function instrumentFilesPlugin(config: CoverageConfig): BuilderPlugin {
   let filter: (id: string | undefined) => boolean;
 
   return {
@@ -159,7 +159,7 @@ export function instrumentFiles(config: CoverageConfig): BuilderPlugin {
  * Imports the compiler to the code in development. This replaces the
  * angular linker vite plugin in development as it's considerably faster.
  */
-export function addCompiler(): BuilderPlugin {
+export function addCompilerPlugin(): BuilderPlugin {
   return {
     name: "add-compiler",
     stage: "post-transform",
@@ -176,7 +176,7 @@ export function addCompiler(): BuilderPlugin {
  * Adds an import for the polyfills file to the main.ts file in the
  * production build.
  */
-export function addPolyfills(): BuilderPlugin {
+export function addPolyfillsPlugin(): BuilderPlugin {
   return {
     name: "add-polyfills",
     stage: "post-transform",
