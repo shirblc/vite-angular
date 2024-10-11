@@ -28,7 +28,11 @@ import defaultLinkerPlugin from "@angular/compiler-cli/linker/babel";
 import less from "less";
 import fs from "node:fs";
 import AngularBuilder from "./plugins/builder/src/builder.base";
-import { hmrPlugin, addCompilerPlugin, addPolyfillsPlugin } from "./plugins/builder/src/builderPlugins";
+import {
+  hmrPlugin,
+  addCompilerPlugin,
+  addPolyfillsPlugin,
+} from "./plugins/builder/src/builderPlugins";
 import path from "node:path";
 
 /**
