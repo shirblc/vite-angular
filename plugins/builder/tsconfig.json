@@ -18,7 +18,7 @@
     "inlineSourceMap": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "declaration": true,
+    "declaration": false, // TODO: Turn this into a package and include d.ts files.
     "noPropertyAccessFromIndexSignature": true,
     "importHelpers": true,
     "removeComments": false,
