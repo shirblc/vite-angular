@@ -42,7 +42,16 @@ export default {
   files: ["src/**/*.spec.ts", "!plugins/tests.ts"],
   browsers: [
     // Commented out until https://github.com/modernweb-dev/web/issues/2777 is resolved
-    // playwrightLauncher({ product: "chromium" }),
+    // playwrightLauncher({
+    //   product: "chromium",
+    //   args: [
+    //     "--disable-gpu",
+    //     "--no-sandbox",
+    //     "--disable-setuid-sandbox",
+    //     "--disable-extensions",
+    //     "--disable-dev-shm-usage",
+    //   ],
+    // }),
     // playwrightLauncher({ product: 'webkit' }),
     // playwrightLauncher({ product: 'firefox' }),
     chromeLauncher({
