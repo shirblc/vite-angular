@@ -79,7 +79,6 @@ if (import.meta.hot) {
 export function hmrPlugin(): BuilderPlugin {
   return {
     name: "hmr-plugin",
-    stage: "post-transform",
     apply: "dev",
 
     /**
@@ -131,7 +130,6 @@ export function instrumentFilesPlugin(config: CoverageConfig): BuilderPlugin {
 
   return {
     name: "instrument-files",
-    stage: "read",
     apply: "test",
     setup(_env) {
       filter = createFilter(config.include, config.exclude);
@@ -162,7 +160,6 @@ export function instrumentFilesPlugin(config: CoverageConfig): BuilderPlugin {
 export function addCompilerPlugin(): BuilderPlugin {
   return {
     name: "add-compiler",
-    stage: "post-transform",
     apply: "dev",
     transform(fileId, code) {
       if (!fileId.includes("main.ts") || !code) return code;
@@ -179,7 +176,6 @@ export function addCompilerPlugin(): BuilderPlugin {
 export function addPolyfillsPlugin(): BuilderPlugin {
   return {
     name: "add-polyfills",
-    stage: "post-transform",
     apply: "production",
     transform(fileId, code) {
       if (!fileId.includes("main.ts") || !code) return code;

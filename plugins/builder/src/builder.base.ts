@@ -34,12 +34,10 @@ import {
 import ts from "typescript";
 import { readFileSync } from "node:fs";
 
-export type ApplyAt = "read" | "post-transform";
 export type Environment = "dev" | "production" | "test";
 
 export interface BuilderPlugin {
   name: string;
-  stage: ApplyAt;
   apply: Environment;
   setup?: (env: Environment) => undefined;
   read?: (fileId: string, code: string | undefined) => string | undefined;
