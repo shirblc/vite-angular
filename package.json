@@ -30,7 +30,7 @@
     "cypress": "^13.16.1",
     "jasmine-core": "^5.5.0",
     "less": "^4.2.1",
-    "magic-string": "^0.30.15",
+    "magic-string": "^0.30.17",
     "prettier": "^3.4.2",
     "rollup-plugin-tsconfig-paths": "^1.5.2",
     "tslib": "^2.8.1",
