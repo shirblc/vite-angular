@@ -18,7 +18,7 @@
     "@babel/plugin-syntax-decorators": "^7.25.9",
     "@babel/plugin-syntax-typescript": "^7.25.9",
     "@types/babel__core": "^7.20.5",
-    "@types/jasmine": "^5.1.5",
+    "@types/jasmine": "^5.1.7",
     "@types/less": "^3.0.6",
     "@types/node": "^22.14.0",
     "@web/dev-server-esbuild": "^1.0.3",
