@@ -14,7 +14,7 @@
     "build:builder": "cd plugins/builder && tsc && cd ../.."
   },
   "devDependencies": {
-    "@babel/core": "^7.26.10",
+    "@babel/core": "^7.27.1",
     "@babel/plugin-syntax-decorators": "^7.27.1",
     "@babel/plugin-syntax-typescript": "^7.25.9",
     "@types/babel__core": "^7.20.5",
