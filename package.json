@@ -16,7 +16,7 @@
   "devDependencies": {
     "@babel/core": "^7.27.1",
     "@babel/plugin-syntax-decorators": "^7.27.1",
-    "@babel/plugin-syntax-typescript": "^7.25.9",
+    "@babel/plugin-syntax-typescript": "^7.27.1",
     "@types/babel__core": "^7.20.5",
     "@types/jasmine": "^5.1.7",
     "@types/less": "^3.0.6",
