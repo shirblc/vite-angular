@@ -29,7 +29,7 @@
     "babel-plugin-istanbul": "^7.0.0",
     "cypress": "^14.5.4",
     "jasmine-core": "^5.9.0",
-    "less": "^4.4.0",
+    "less": "^4.4.1",
     "magic-string": "^0.30.17",
     "prettier": "^3.6.2",
     "rollup-plugin-tsconfig-paths": "^1.5.2",
